@@ -1,0 +1,11 @@
+<%# Email#4 -%>
+Contractor: <%= @contractor.th_company_name %> / <%= @contractor.en_company_name %>
+Tax id: <%= @contractor.tax_id %>
+Credit Limit: <%= @contractor.credit_limit_amount %>
+Applied dealers:
+<% @dealers.each do |dealer| -%>
+<%= "#{dealer[:i]}. #{dealer[:th_name]}/#{dealer[:en_name]}, Credit Limit = #{dealer[:credit_limit]}" %>
+<% end %>
+
+<%= @result %> on <%= @result_date %>
+Find detail at <%= @url %>

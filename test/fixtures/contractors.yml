@@ -1,0 +1,319 @@
+# == Schema Information
+#
+# Table name: contractors
+#
+#  id                                       :bigint(8)        not null, primary key
+#  tax_id                                   :string(15)       not null
+#  contractor_type                          :integer          default("normal"), not null
+#  main_dealer_id                           :integer
+#  use_only_credit_limit                    :boolean          default(FALSE), not null
+#  application_type                         :integer          not null
+#  approval_status                          :integer          not null
+#  application_number                       :string(20)
+#  registered_at                            :datetime
+#  register_user_id                         :integer
+#  enable_rudy_confirm_payment              :boolean          default(TRUE)
+#  pool_amount                              :decimal(10, 2)   default(0.0), not null
+#  delay_penalty_rate                       :integer          default(18), not null
+#  is_switch_unavailable                    :boolean          default(FALSE), not null
+#  status                                   :integer          default("active"), not null
+#  exemption_late_charge_count              :integer          default(0), not null
+#  project_exemption_late_charge_count      :integer          default(0), not null
+#  check_payment                            :boolean          default(FALSE), not null
+#  stop_payment_sms                         :boolean          default(FALSE), not null
+#  notes                                    :text(65535)
+#  notes_updated_at                         :datetime
+#  notes_update_user_id                     :integer
+#  doc_company_registration                 :boolean          default(FALSE), not null
+#  doc_vat_registration                     :boolean          default(FALSE), not null
+#  doc_owner_id_card                        :boolean          default(FALSE), not null
+#  doc_authorized_user_id_card              :boolean          default(FALSE), not null
+#  doc_bank_statement                       :boolean          default(FALSE), not null
+#  doc_tax_report                           :boolean          default(FALSE), not null
+#  th_company_name                          :string(100)
+#  en_company_name                          :string(100)
+#  address                                  :string(200)
+#  phone_number                             :string(20)
+#  registration_no                          :string(30)
+#  establish_year                           :string(4)
+#  establish_month                          :string(2)
+#  employee_count                           :string(6)
+#  capital_fund_mil                         :string(20)
+#  shareholders_equity                      :decimal(20, 2)
+#  recent_revenue                           :decimal(20, 2)
+#  short_term_loan                          :decimal(20, 2)
+#  long_term_loan                           :decimal(20, 2)
+#  recent_profit                            :decimal(20, 2)
+#  apply_from                               :string(255)
+#  th_owner_name                            :string(40)
+#  en_owner_name                            :string(40)
+#  owner_address                            :string(200)
+#  owner_sex                                :integer
+#  owner_birth_ymd                          :string(8)
+#  owner_personal_id                        :string(20)
+#  owner_email                              :string(200)
+#  owner_mobile_number                      :string(15)
+#  owner_line_id                            :string(20)
+#  authorized_person_same_as_owner          :boolean          default(FALSE), not null
+#  authorized_person_name                   :string(40)
+#  authorized_person_title_division         :string(40)
+#  authorized_person_personal_id            :string(20)
+#  authorized_person_email                  :string(200)
+#  authorized_person_mobile_number          :string(15)
+#  authorized_person_line_id                :string(20)
+#  contact_person_same_as_owner             :boolean          default(FALSE), not null
+#  contact_person_same_as_authorized_person :boolean          default(FALSE), not null
+#  contact_person_name                      :string(40)
+#  contact_person_title_division            :string(40)
+#  contact_person_personal_id               :string(20)
+#  contact_person_email                     :string(200)
+#  contact_person_mobile_number             :string(15)
+#  contact_person_line_id                   :string(20)
+#  approved_at                              :datetime
+#  approval_user_id                         :integer
+#  update_user_id                           :integer
+#  online_apply_token                       :string(30)
+#  deleted                                  :integer          default(0), not null
+#  rejected_at                              :datetime
+#  reject_user_id                           :integer
+#  created_at                               :datetime         not null
+#  create_user_id                           :integer
+#  updated_at                               :datetime         not null
+#  operation_updated_at                     :datetime
+#  qr_code_updated_at                       :datetime
+#  lock_version                             :integer          default(0)
+#
+
+contractor1:
+  main_dealer: :dealer1
+  application_type: "shop"
+  approval_status: "qualified"
+  tax_id: "0000000000001"
+  en_company_name: "Contractor 1(en)"
+  th_company_name: "Contractor 1(th)"
+  address: "1-6-1 Nagata-cho, Chiyoda-ku, Tokyo 100-8968, Japan"
+  phone_number: "123456789"
+  registration_no: "000000000001"
+  establish_year: "1956"
+  employee_count: "150"
+  capital_fund_mil: "30"
+  pool_amount: 10.0
+  call_required: false
+  doc_company_registration: true
+  doc_vat_registration: true
+  doc_owner_id_card: true
+  doc_authorized_user_id_card: true
+
+  th_owner_name: "th_owner_name"
+  en_owner_name: "en_owner_name"
+  owner_address: "owner_address"
+  owner_sex: male
+  owner_birth_ymd: "19700101"
+  owner_personal_id: "0000000000001"
+  owner_email: "owner@example.com"
+  owner_mobile_number: "0000000001"
+
+  authorized_person_name: "authorized_person_name"
+  authorized_person_title_division: "authorized_person"
+  authorized_person_personal_id: "0000000000002"
+  authorized_person_email: "authorized@example.com"
+  authorized_person_mobile_number: "0000000002"
+
+  contact_person_name: "contact_person_name"
+  contact_person_title_division: "contact_person"
+  contact_person_personal_id: "0000000000003"
+  contact_person_email: "contact@example.com"
+  contact_person_mobile_number: "00000000003"
+
+# contractor2:
+#   main_dealer: :dealer1
+#   application_type: "shop"
+#   approval_status: "qualified"
+#   tax_id: "UT-000000-002"
+#   call_required: true
+#   en_company_name: "Contractor 2(en)"
+#   th_company_name: "Contractor 2(th)"
+contractor2:
+  main_dealer: :dealer1
+  application_type: "shop"
+  approval_status: "qualified"
+  tax_id: "0000000000002"
+  en_company_name: "Contractor 2(en)"
+  th_company_name: "Contractor 2(th)"
+  address: "1-6-1 Nagata-cho, Chiyoda-ku, Tokyo 100-8968, Japan"
+  phone_number: "123456789"
+  registration_no: "000000000001"
+  establish_year: "1960"
+  employee_count: "140"
+  capital_fund_mil: "99"
+  pool_amount: 20.0
+  call_required: true
+  doc_company_registration: true
+  doc_vat_registration: true
+  doc_owner_id_card: true
+  doc_authorized_user_id_card: true
+
+  th_owner_name: "th_owner_name"
+  en_owner_name: "en_owner_name"
+  owner_address: "owner_address"
+  owner_sex: male
+  owner_birth_ymd: "19700101"
+  owner_personal_id: "2000000000001"
+  owner_email: "owner@example.com"
+  owner_mobile_number: "2000000001"
+
+  authorized_person_name: "authorized_person_name"
+  authorized_person_title_division: "authorized_person"
+  authorized_person_personal_id: "2000000000002"
+  authorized_person_email: "authorized@example.com"
+  authorized_person_mobile_number: "2000000002"
+
+  contact_person_name: "contact_person_name"
+  contact_person_title_division: "contact_person"
+  contact_person_personal_id: "2000000000003"
+  contact_person_email: "contact@example.com"
+  contact_person_mobile_number: "20000000003"
+# contractor3:
+#   main_dealer: :dealer1
+#   application_type: "shop"
+#   approval_status: "processing"
+#   tax_id: "UT-000000-003"
+#   call_required: false
+#   en_company_name: "Contractor 3(en)"
+#   th_company_name: "Contractor 3(th)"
+contractor3:
+  main_dealer: :dealer1
+  application_type: "shop"
+  approval_status: "processing"
+  tax_id: "0000000000003"
+  en_company_name: "Contractor 3(en)"
+  th_company_name: "Contractor 3(th)"
+  address: "1-6-1 Nagata-cho, Chiyoda-ku, Tokyo 100-8968, Japan"
+  phone_number: "123456789"
+  registration_no: "000000000003"
+  establish_year: "1980"
+  employee_count: "100"
+  capital_fund_mil: "20"
+  pool_amount: 0
+  call_required: false
+  doc_company_registration: true
+  doc_vat_registration: true
+  doc_owner_id_card: true
+  doc_authorized_user_id_card: true
+
+  th_owner_name: "th_owner_name"
+  en_owner_name: "en_owner_name"
+  owner_address: "owner_address"
+  owner_sex: male
+  owner_birth_ymd: "19700101"
+  owner_personal_id: "3000000000001"
+  owner_email: "owner@example.com"
+  owner_mobile_number: "3000000001"
+
+  authorized_person_name: "authorized_person_name"
+  authorized_person_title_division: "authorized_person"
+  authorized_person_personal_id: "3000000000002"
+  authorized_person_email: "authorized@example.com"
+  authorized_person_mobile_number: "3000000002"
+
+  contact_person_name: "contact_person_name"
+  contact_person_title_division: "contact_person"
+  contact_person_personal_id: "3000000000003"
+  contact_person_email: "contact@example.com"
+  contact_person_mobile_number: "30000000003"
+# contractor4:
+#   main_dealer: :dealer1
+#   application_type: "shop"
+#   approval_status: "rejected"
+#   tax_id: "UT-000000-004"
+#   call_required: false
+#   en_company_name: "Contractor 4(en)"
+#   th_company_name: "Contractor 4(th)"
+contractor4:
+  main_dealer: :dealer1
+  application_type: "shop"
+  approval_status: "rejected"
+  tax_id: "0000000000004"
+  en_company_name: "Contractor 4(en)"
+  th_company_name: "Contractor 4(th)"
+  address: "1-6-1 Nagata-cho, Chiyoda-ku, Tokyo 100-8968, Japan"
+  phone_number: "123456789"
+  registration_no: "000000000004"
+  establish_year: "1990"
+  employee_count: "90"
+  capital_fund_mil: "50"
+  pool_amount: 1300.0
+  call_required: false
+  doc_company_registration: true
+  doc_vat_registration: true
+  doc_owner_id_card: true
+  doc_authorized_user_id_card: true
+
+  th_owner_name: "th_owner_name"
+  en_owner_name: "en_owner_name"
+  owner_address: "owner_address"
+  owner_sex: female
+  owner_birth_ymd: "19700101"
+  owner_personal_id: "4000000000001"
+  owner_email: "owner@example.com"
+  owner_mobile_number: "4000000001"
+
+  authorized_person_name: "authorized_person_name"
+  authorized_person_title_division: "authorized_person"
+  authorized_person_personal_id: "4000000000002"
+  authorized_person_email: "authorized@example.com"
+  authorized_person_mobile_number: "4000000002"
+
+  contact_person_name: "contact_person_name"
+  contact_person_title_division: "contact_person"
+  contact_person_personal_id: "4000000000003"
+  contact_person_email: "contact@example.com"
+  contact_person_mobile_number: "40000000003"
+# contractor5:
+#   main_dealer: :dealer2
+#   application_type: "shop"
+#   approval_status: "qualified"
+#   tax_id: "UT-000000-005"
+#   call_required: false
+#   en_company_name: "Contractor 5(en)"
+#   th_company_name: "Contractor 5(th)"
+contractor5:
+  main_dealer: :dealer1
+  application_type: "shop"
+  approval_status: "qualified"
+  tax_id: "0000000000005"
+  en_company_name: "Contractor 5(en)"
+  th_company_name: "Contractor 5(th)"
+  address: "1-6-1 Nagata-cho, Chiyoda-ku, Tokyo 100-8968, Japan"
+  phone_number: "123456789"
+  registration_no: "000000000005"
+  establish_year: "1990"
+  employee_count: "80"
+  capital_fund_mil: "10"
+  pool_amount: 1300.0
+  call_required: false
+  doc_company_registration: true
+  doc_vat_registration: true
+  doc_owner_id_card: true
+  doc_authorized_user_id_card: true
+
+  th_owner_name: "th_owner_name"
+  en_owner_name: "en_owner_name"
+  owner_address: "owner_address"
+  owner_sex: female
+  owner_birth_ymd: "19700101"
+  owner_personal_id: "5000000000001"
+  owner_email: "owner@example.com"
+  owner_mobile_number: "5000000001"
+
+  authorized_person_name: "authorized_person_name"
+  authorized_person_title_division: "authorized_person"
+  authorized_person_personal_id: "5000000000002"
+  authorized_person_email: "authorized@example.com"
+  authorized_person_mobile_number: "5000000002"
+
+  contact_person_name: "contact_person_name"
+  contact_person_title_division: "contact_person"
+  contact_person_personal_id: "5000000000003"
+  contact_person_email: "contact@example.com"
+  contact_person_mobile_number: "50000000003"

@@ -1,0 +1,126 @@
+# == Schema Information
+#
+# Table name: payments
+#
+#  id                   :bigint(8)        not null, primary key
+#  contractor_id        :integer          not null
+#  due_ymd              :string(8)        not null
+#  paid_up_ymd          :string(8)
+#  paid_up_operated_ymd :string(8)
+#  total_amount         :decimal(10, 2)   default(0.0), not null
+#  paid_total_amount    :decimal(10, 2)   default(0.0), not null
+#  paid_exceeded        :decimal(10, 2)   default(0.0), not null
+#  paid_cashback        :decimal(10, 2)   default(0.0), not null
+#  status               :integer          default("not_due_yet"), not null
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+payment20181031:
+  contractor: contractor1
+  due_ymd: 20181031
+  paid_up_ymd: 20181031
+  total_amount: 4100.4
+  paid_total_amount: 4100.4
+  status: paid
+
+payment20181115:
+  contractor: contractor1
+  due_ymd: 20181115
+  paid_up_ymd: 20181115
+  total_amount: 4100.4
+  paid_total_amount: 4100.4
+  status: paid
+
+payment20181130:
+  contractor: contractor1
+  due_ymd: 20181130
+  paid_up_ymd: 20181130
+  total_amount: 4100.4
+  paid_total_amount: 4100.4
+  status: paid
+
+payment20181215:
+  contractor: contractor1
+  due_ymd: 20181215
+  paid_up_ymd: 20181215
+  total_amount: 8200.8
+  paid_total_amount: 8200.8
+  status: paid
+
+payment20181215_2:
+  contractor: contractor2
+  due_ymd: 20181215
+  paid_up_ymd:
+  total_amount: 4100.4
+  paid_total_amount: 0
+  status: over_due
+
+payment20181231:
+  contractor: contractor1
+  due_ymd: 20181231
+  paid_up_ymd: 20181231
+  total_amount: 4100.4
+  paid_total_amount: 0.0
+  status: paid
+
+payment20190115:
+  contractor: contractor1
+  due_ymd: 20190115
+  paid_up_ymd: 20190114
+  paid_up_operated_ymd: 20190115
+  total_amount: 8200.8
+  paid_total_amount: 8200.8
+  status: paid
+
+payment20190115_2:
+  contractor: contractor2
+  due_ymd: 20190115
+  paid_up_ymd: 
+  total_amount: 4100.4
+  paid_total_amount: 0
+  status: next_due
+
+payment20190131:
+  contractor: contractor1
+  due_ymd: 20190131
+  paid_up_ymd:
+  total_amount: 4100.4
+  paid_total_amount: 0.0
+  status: next_due
+
+payment20190215:
+  contractor: contractor1
+  due_ymd: 20190215
+  paid_up_ymd:
+  total_amount: 3000.0
+  paid_total_amount: 0.0
+  status: not_due_yet
+
+payment20190215_2:
+  contractor: contractor2
+  due_ymd: 20190215
+  paid_up_ymd:
+  total_amount: 4100.4
+  paid_total_amount: 0.0
+  status: not_due_yet
+
+payment20190228:
+  contractor: contractor1
+  due_ymd: 20190228
+  paid_up_ymd:
+  total_amount: 4100.4
+  paid_total_amount: 0.0
+  status: not_due_yet
+
+payment20190331:
+  contractor: contractor1
+  due_ymd: 20190331
+  paid_up_ymd:
+  total_amount: 4100.4
+  paid_total_amount: 0.0
+  status: not_due_yet
+

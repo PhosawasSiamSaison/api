@@ -1,0 +1,2 @@
+class CalculateLateCharge < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class CalculatePaymentAndInstallment < ApplicationRecord
+end

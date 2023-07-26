@@ -1,0 +1,281 @@
+en:
+  # モデルのバリデーション以外で定義するエラー
+  error_message:
+    login_error: Your Username or Passcode was incorrect
+    invalid_access_key: Invalid Access Key
+    auth_error: Auth Error
+    current_password_error: Current password is invalid
+    delete_own_account_error: Can't delete own account
+    permission_denied: You do not have permission to perform operations
+    duplicate_password_error: You must register a password different from the current password
+    stale_object_error: The data may be already updated by another user
+    invalid_future_date: You can not register future date
+    some_amount_has_already_been_paid: Some amount has already been paid.
+    no_input_date: Input Date has not been entered yet.
+    already_canceled_order: The order has been canceled.
+    already_rescheduled_order: The order has been rescheduled.
+    is_applying_change_product: The order has been applying change product.
+    rescheduled_new_order: The order is Reschedule Order.
+    exceeding_cashback_amount_error: Exceeding Cashback Amount.
+    # ローン変更、申請期間の超過
+    over_apply_change_product_limit_date: It is already past the application deadline.
+    credit_limit_not_registered: Credit Limit not registered
+    change_product_not_allow: Not Allow Switch Payment Term
+    updated_terms_of_service: Sorry. Terms of servie has been updated. Please reload this page.
+    has_can_repayment_and_applying_change_product_orders: Exist Applied Switch Payment Term
+    updated_front_version: App has been updated. Please reload this page.
+    invalid_reschedule_order_count: Reschedule Order count is invalid.
+    invalid_fee_order_count: Fee Order count is invalid.
+    account_has_already_activated: Your account has already activated.
+    not_applicable_for_adjust_repayment: This Installment is not applicable.
+    is_downloading_csv: The system is exporting another Report. Please wait for a while.
+    invalid_passcode: Invalid Passcode.
+
+  message:
+    cannot_show_otp: Cannot show because it is OTP message.
+    auto_repayment_exceeded_and_cashback_comment: Auto Exceeded/Cashback Allocation
+
+  consts:
+    jv_user_name_for_contractor_user: SIAM SAISON
+
+  enum:
+    application_record:
+      dealer_type:
+        cbm: CBM
+        cpac: CPAC
+        global_house: GH
+        q_mix: Qmix
+        transformer: Supply Chain Finance # 'no205対応:Transformerの名称変更'
+        solution: CPAC Solution
+        b2b: B2B
+        nam: NAM
+        bigth: BIG TH
+        permsin: Permsin
+        scgp: Boonthavorn
+        rakmao: Rakmao
+        cotto: Cotto
+        d_gov: Government
+      class_type:
+        s_class: S
+        a_class: A
+        b_class: B
+        c_class: C
+        d_class: D
+        e_class: E
+        f_class: F
+        g_class: G
+        h_class: H
+        i_class: I
+        reject_class: Reject
+        pending_class: Pending
+      message_type:
+        password_reset: reset passcode
+        register_user_on_approval: register user on approval
+        personal_id_confirmed: first login
+        test_sending: Test sending
+        reminder_two_days_before_due_date: reminder(2days before due date)
+        reminder_on_due_date: reminder(on due date)
+        inform_statement: inform statement
+        over_due_next_day: over due
+        send_one_time_passcode: one time passcode
+        approval_change_product: switch approval
+        can_switch_7days_ago_sms: switch announcement(7days before)
+        new_site_information: create site info
+        update_site_information: update site info
+        create_cpac_order: create cpac order
+        can_switch_3days_ago_sms: switch announcement(3days before)
+        create_contractor_user: register user
+        new_project_information: create project info
+        update_project_information: update project info
+        external_message_from_rudy: external message(RUDY)
+        external_message_from_ssa: external message(SSA)
+        online_apply_one_time_passcode: one time passcode(online apply)
+        identity_verification_link: identity verification link(online apply)
+        reject_contractor: reject contractor(online apply)
+        pdpa_agree: pdpa agree
+        login_to_rudy: login to rudy
+        online_apply_complete: online application message
+        change_user_verify_mode_otp: change user verify mode otp
+        set_pf_site_limit: set project finance site limit
+        receive_payment: received payment notification
+
+      send_status:
+        unsent: Unsent
+        sending: Sending
+        done: Success
+        failed: Failure
+
+    mail_spool:
+      mail_type:
+        online_apply_one_time_passcode_mail: Online Application OTP
+        approve_contractor: Approve Contractor
+        reject_contractor: Reject Contractor
+        scoring_results_to_staff: Scoring results notification to SS staffs
+        pdpa_agree: PDPA Agreement
+        pdpa_results_to_staff: PDPA notifications to SS staffs
+        online_apply_complete: Online Application complete email
+        contractor_billing_pdf: Billing Statement
+        receive_payment: Received payment notification
+        exceeded_payment: Exceeded payment notification
+        test_mail: test_mail
+
+    jv_user:
+      user_type:
+        md: MD/MGR
+        staff: Contract staff
+
+    dealer_user:
+      user_type:
+        owner: Dealer Owner
+        osr: OSR
+
+    project_manager_user:
+      user_type:
+        md: MD/MGR
+        staff: Staff
+
+    dealer:
+      status:
+        active: Active
+        inactive: Inactive
+
+    contractor:
+      contractor_type:
+        normal: Contractor
+        sub_dealer: Sub Dealer
+        government: Government
+        individual: Individual Sub Dealer
+      application_type:
+        applied_online: Online
+        applied_paper: Paper
+      approval_status:
+        pre_registration: Pre-Registration
+        processing: Processing Qualification
+        qualified: Qualified
+        rejected: Rejected
+        draft: Draft
+      owner_sex:
+        male: Male
+        female: Female
+        unselected: Unselected
+      status:
+        active: Active
+        inactive: Inactive
+      dealer_type:
+        cbm: CBM
+        cpac: CPAC
+        global_house: GH
+        q_mix: Qmix
+        transformer: Transformer
+
+    payment:
+      status:
+        not_due_yet: Not Due Yet
+        next_due: Next Due
+        paid: Paid
+        over_due: Over Due
+
+    cashback_history:
+      point_type:
+        gain: Earned Cashback
+        use: Used Cashback
+
+    contractor_user:
+      user_type:
+        owner: Owner
+        authorized: Authorized Person
+        contact: Contact Person
+        other: Other
+      verify_mode:
+        verify_mode_otp: OTP
+        verify_mode_login_passcode: Login Passcode
+
+    order:
+      change_product_status:
+        unapply: Unapply
+        applied: Applied
+        approval: Approval
+        rejected: Reject
+        registered: Changed
+
+    scoring_result:
+      rudy_ranking:
+        s_rank: S
+        a_rank: A
+        b_rank: B
+
+    project:
+      project_type:
+        detached_house: Detached House
+        renovation_work: Renovation Work
+      status:
+        opened: Open
+        closed: Closed
+
+    project_manager:
+      project_manager_type:
+        cpac: CPAC Solution
+        pmb: Project Manager B
+      status:
+        active: Active
+        inactive: Inactive
+
+    project_phase:
+      status:
+        not_opened_yet: Not Opened Yet
+        opened: Open
+        closed: Close
+
+    project_document:
+      file_type:
+        right_transfer_agreement: Right Transfer Agreement
+        acceptance_agreement: Acceptance Agreement
+        phase_delivery_letter: Phase Delivery Letter
+        phase_acceptance_agreement: Phase Acceptance Agreement
+        mou: MOU
+        etc: ETC(other)
+        contract: Contract
+
+    project_phase_site:
+      status:
+        opened: Open
+        closed: Close
+
+  select_item:
+    repayment_list:
+      repayment_status:
+        all: All
+        over_due: Over Due
+        upcoming_due: Upcoming Due
+        not_due_yet: Not Due Yet
+        not_input_yet: Not Input Yet
+
+  activerecord:
+    models:
+    attributes:
+      contractor:
+        tax_id: TAX ID
+        owner_personal_id: Owner's Citizen ID
+        authorized_person_personal_id: Authorized Person's Citizen ID
+        contact_person_personal_id: Contact Person's Citizen ID
+        main_dealer_id: Dealer
+        th_company_name: Company Name (TH)
+        en_company_name: Company Name (EN)
+        phone_number: TEL (Office)
+        registration_no: Company Registration NO.
+        employee_count: NO. of employee
+        capital_fund_mil: Registered Capital
+        th_owner_name: Owner Name (TH)
+        en_owner_name: Owner Name (EN)
+        owner_address: Owner Address
+        owner_sex: Owner Gender
+        owner_birth_ymd: Owner Date of Birth
+        owner_personal_id: Owner Citizen ID
+        authorized_person_personal_id: Authorized Person Citizen ID
+        contact_person_personal_id: Contact Person Citizen ID
+
+      dealer:
+        tax_id: TAX ID
+
+      project_phase_site:
+        phase_limit: Contractor Phase Limit

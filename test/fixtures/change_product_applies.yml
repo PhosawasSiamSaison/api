@@ -1,0 +1,17 @@
+
+# == Schema Information
+#
+# Table name: change_product_applies
+#
+#  id                   :bigint(8)        not null, primary key
+#  contractor_id        :bigint(8)
+#  due_ymd              :string(8)        not null
+#  completed_at         :datetime
+#  memo                 :string(500)
+#  apply_user_id        :integer
+#  register_user_id     :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#

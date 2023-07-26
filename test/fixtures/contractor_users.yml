@@ -1,0 +1,122 @@
+# == Schema Information
+#
+# Table name: contractor_users
+#
+#  id                       :bigint(8)        not null, primary key
+#  contractor_id            :integer          not null
+#  user_type                :integer          default(NULL), not null
+#  user_name                :string(20)       not null
+#  full_name                :string(40)       not null
+#  mobile_number            :string(15)
+#  title_division           :string(40)
+#  email                    :string(200)
+#  line_id                  :string(20)
+#  line_user_id             :string(255)
+#  line_nonce               :string(255)
+#  initialize_token         :string(30)
+#  verify_mode              :integer          default("verify_mode_otp"), not null
+#  verify_mode_otp          :string(10)
+#  login_failed_count       :integer          default(0), not null
+#  rudy_passcode            :string(10)
+#  rudy_passcode_created_at :datetime
+#  rudy_auth_token          :string(30)
+#  password_digest          :string(255)
+#  temp_password            :string(15)
+#  create_user_type         :string(255)
+#  create_user_id           :integer
+#  update_user_type         :string(255)
+#  update_user_id           :integer
+#  deleted                  :integer          default(0), not null
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  operation_updated_at     :datetime
+#  lock_version             :integer          default(0)
+#
+
+taro:
+  contractor: contractor1
+  user_type: owner
+  user_name: "0000000000001"
+  full_name: Taro
+  mobile_number: "123456781"
+  title_division: Staff
+  agreed_at:
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password: 123456
+  create_user: jv_user1 (JvUser)
+  update_user: jv_user1 (JvUser)
+
+hanako:
+  contractor: contractor1
+  user_type: authorized
+  user_name: "0000000000002"
+  full_name: Hanako
+  mobile_number: "123456782"
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password: 123456
+  rudy_auth_token: hanako
+  create_user: taro (ContractorUser)
+  update_user: taro (ContractorUser)
+
+bob:
+  contractor: contractor1
+  user_type: contact
+  user_name: "0000000000003"
+  full_name: Bob
+  mobile_number: "123456783"
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password:
+  create_user: taro (ContractorUser)
+  update_user: taro (ContractorUser)
+
+alice:
+  contractor: contractor1
+  user_type: other
+  user_name: "0000000000004"
+  full_name: Alice
+  mobile_number: "123456784"
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password:
+  create_user: taro (ContractorUser)
+  update_user: taro (ContractorUser)
+
+tom:
+  contractor: contractor2
+  user_type: owner
+  user_name: "0000000000005"
+  full_name: Tom
+  mobile_number: "123456786"
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password:
+  create_user: jv_user1 (JvUser)
+  update_user: jv_user1 (JvUser)
+
+ken:
+  contractor: contractor3
+  user_type: owner
+  user_name: "3000000000001"
+  full_name: ken
+  mobile_number: 1234567890
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password:
+  rudy_auth_token: ken
+  create_user: jv_user1 (JvUser)
+  update_user: jv_user1 (JvUser)
+
+vianca:
+  contractor: contractor5
+  user_type: owner
+  user_name: "5000000000001"
+  full_name: Vianca
+  mobile_number: 1234567890
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('123456') %>
+  temp_password:
+  rudy_auth_token: vianca
+  create_user: jv_user1 (JvUser)
+  update_user: jv_user1 (JvUser)

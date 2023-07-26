@@ -1,0 +1,50 @@
+# == Schema Information
+#
+# Table name: products
+#
+#  id                      :bigint(8)        not null, primary key
+#  product_key             :integer
+#  product_name            :string(40)
+#  switch_sms_product_name :string(255)
+#  number_of_installments  :integer
+#  sort_number             :integer
+#  annual_interest_rate    :decimal(5, 2)
+#  monthly_interest_rate   :decimal(5, 2)
+#  deleted                 :integer          default(0), not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  operation_updated_at    :datetime
+#  lock_version            :integer          default(0)
+#
+
+product1:
+  product_key: 1
+  product_name: "Product 1"
+  number_of_installments: 1
+  sort_number: 1
+  annual_interest_rate: 0.0
+  monthly_interest_rate: 0.0
+
+product2:
+  product_key: 2
+  product_name: "Product 2"
+  number_of_installments: 3
+  sort_number: 3
+  annual_interest_rate: 2.51
+  monthly_interest_rate: 0.83
+
+product3:
+  product_key: 3
+  product_name: "Product 3"
+  number_of_installments: 6
+  sort_number: 4
+  annual_interest_rate: 4.42
+  monthly_interest_rate: 0.73
+
+product4:
+  product_key: 4
+  product_name: "Product 4"
+  number_of_installments: 1
+  sort_number: 2
+  annual_interest_rate: 2.46
+  monthly_interest_rate: 1.23

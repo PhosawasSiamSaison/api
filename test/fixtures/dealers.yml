@@ -1,0 +1,93 @@
+# == Schema Information
+#
+# Table name: dealers
+#
+#  id                   :bigint(8)        not null, primary key
+#  tax_id               :string(13)       not null
+#  area_id              :integer          not null
+#  dealer_type          :integer          not null
+#  dealer_code          :string(20)       not null
+#  for_normal_rate      :decimal(5, 2)    default(2.0), not null
+#  for_government_rate  :decimal(5, 2)    default(1.75)
+#  for_sub_dealer_rate  :decimal(5, 2)    default(1.5)
+#  for_individual_rate  :decimal(5, 2)    default(1.5)
+#  dealer_name          :string(50)
+#  en_dealer_name       :string(50)
+#  bank_account         :string(1000)
+#  address              :string(1000)
+#  interest_rate        :decimal(5, 2)
+#  status               :integer          default("active"), not null
+#  create_user_id       :integer
+#  update_user_id       :integer
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+dealer1:
+  tax_id: "0000000000001"
+  area_id: 1
+  dealer_code: "0001"
+  dealer_name: "Dealer 1"
+  address: Bangkok 1000
+  bank_account: 123456
+  status: "active"
+  create_user: jv_user1
+  update_user: jv_user1
+
+dealer2:
+  tax_id: "0000000000002"
+  area_id: 2
+  dealer_code: "0002"
+  dealer_name: "Dealer 2"
+  address: Bangkok 1000
+  bank_account: 123456
+  status: "active"
+  create_user: jv_user1
+  update_user: jv_user1
+
+dealer3:
+  tax_id: "0000000000003"
+  area_id: 3
+  dealer_code: "0003"
+  dealer_name: "Dealer 3"
+  address: Bangkok 1000
+  bank_account: 123456
+  status: "active"
+  create_user: jv_user1
+  update_user: jv_user1
+
+dealer4:
+  tax_id: "0000000000004"
+  area_id: 4
+  dealer_code: "0004"
+  dealer_name: "Dealer 4"
+  address: Bangkok 1000
+  bank_account: 123456
+  status: "active"
+  create_user: jv_user1
+  update_user: jv_user1
+
+dealer5:
+  tax_id: "0000000000005"
+  area_id: 5
+  dealer_code: "0005"
+  dealer_name: "Dealer 5"
+  address: Bangkok 1000
+  bank_account: 123456
+  status: "active"
+  create_user: jv_user1
+  update_user: jv_user1
+
+dealer6:
+  tax_id: "0000000000006"
+  area_id: 6
+  dealer_code: "0006"
+  dealer_name: "Dealer 6"
+  address: Bangkok 1000
+  bank_account: 123456
+  status: "active"
+  create_user: jv_user1
+  update_user: jv_user1

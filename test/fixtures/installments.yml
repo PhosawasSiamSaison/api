@@ -1,0 +1,223 @@
+# == Schema Information
+#
+# Table name: installments
+#
+#  id                   :bigint(8)        not null, primary key
+#  contractor_id        :bigint(8)
+#  order_id             :integer          not null
+#  payment_id           :integer
+#  installment_number   :integer          not null
+#  rescheduled          :boolean          default(FALSE), not null
+#  exempt_late_charge   :boolean          default(FALSE), not null
+#  due_ymd              :string(8)        not null
+#  paid_up_ymd          :string(8)
+#  principal            :decimal(10, 2)   default(0.0), not null
+#  interest             :decimal(10, 2)   default(0.0), not null
+#  paid_principal       :decimal(10, 2)   default(0.0), not null
+#  paid_interest        :decimal(10, 2)   default(0.0), not null
+#  paid_late_charge     :decimal(10, 2)   default(0.0), not null
+#  used_exceeded        :decimal(10, 2)   default(0.0)
+#  used_cashback        :decimal(10, 2)   default(0.0)
+#  reduced_site_limit   :decimal(10, 2)   default(0.0)
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+order1_installment1:
+  order: order1
+  payment: payment20181031
+  installment_number: 1
+  due_ymd: 20181031
+  paid_up_ymd: 20181031
+  principal: 120000.0
+  interest: 301.2
+  paid_principal: 120000.0
+  paid_interest: 301.2
+  paid_late_charge: 0
+
+order1_installment2:
+  order: order1
+  payment: payment20181130
+  installment_number: 2
+  due_ymd: 20181130
+  paid_up_ymd: 20181130
+  principal: 120000.0
+  interest: 301.2
+  paid_principal: 120000.0
+  paid_interest: 301.2
+  paid_late_charge: 0
+
+order1_installment3:
+  order: order1
+  payment: payment20181231
+  installment_number: 3
+  due_ymd: 20181231
+  paid_up_ymd: 20181231
+  principal: 120000.0
+  interest: 301.2
+  paid_principal: 120000.0
+  paid_interest: 301.2
+  paid_late_charge: 0
+
+
+order2_installment1:
+  order: order2
+  payment: payment20181115
+  installment_number: 1
+  due_ymd: 20181115
+  paid_up_ymd: 20181115
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 4000.0
+  paid_interest: 100.4
+  paid_late_charge: 0
+
+order2_installment2:
+  order: order2
+  payment: payment20181115
+  installment_number: 2
+  due_ymd: 20181115
+  paid_up_ymd: 20181115
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 4000.0
+  paid_interest: 100.4
+  paid_late_charge: 0
+
+order2_installment3:
+  order: order2
+  payment: payment20190115
+  installment_number: 3
+  due_ymd: 20190115
+  paid_up_ymd: 20190115
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 4000.0
+  paid_interest: 100.4
+  paid_late_charge: 0
+
+
+order3_installment1:
+  order: order3
+  payment: payment20181215
+  installment_number: 1
+  due_ymd: 20181215
+  paid_up_ymd: 20181215
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 4000.0
+  paid_interest: 100.4
+  paid_late_charge: 0
+
+order3_installment2:
+  order: order3
+  payment: payment20190115
+  installment_number: 2
+  due_ymd: 20190115
+  paid_up_ymd: 20190115
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 4000.0
+  paid_interest: 100.4
+  paid_late_charge: 0
+
+order3_installment3:
+  order: order3
+  payment: payment20190215
+  installment_number: 3
+  due_ymd: 20190215
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+
+order4_installment1:
+  order: order4
+  payment: payment20190131
+  installment_number: 1
+  due_ymd: 20190131
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+order4_installment2:
+  order: order4
+  payment: payment20190228
+  installment_number: 2
+  due_ymd: 20190228
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+order4_installment3:
+  order: order4
+  payment: payment20190331
+  installment_number: 3
+  due_ymd: 20190331
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+
+order5_installment1:
+  order: order5
+  payment: payment20181215_2
+  installment_number: 1
+  due_ymd: 20181215
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+order5_installment2:
+  order: order5
+  payment: payment20190115_2
+  installment_number: 2
+  due_ymd: 20190115
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+order5_installment3:
+  order: order5
+  payment: payment20190215_2
+  installment_number: 3
+  due_ymd: 20190215
+  paid_up_ymd:
+  principal: 4000.0
+  interest: 100.4
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0
+
+order6_installment1:
+  order: order6
+  payment: payment20190215
+  installment_number: 1
+  due_ymd: 20190215
+  paid_up_ymd:
+  principal: 3000.0
+  interest: 0
+  paid_principal: 0
+  paid_interest: 0
+  paid_late_charge: 0

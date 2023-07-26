@@ -1,0 +1,39 @@
+# == Schema Information
+#
+# Table name: for_dealer_payments
+#
+#  id                   :bigint(8)        not null, primary key
+#  dealer_id            :bigint(8)
+#  status               :integer          default("pending"), not null
+#  comment              :text(65535)      not null
+#  reference_no         :string(20)
+#  transfer_ymd         :string(8)
+#  confirmed_at         :datetime
+#  paid_at              :datetime
+#  confirmed_user_id    :integer
+#  paid_user_id         :integer
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+for_dealer_payment1:
+  dealer: dealer1
+  status: pending
+  comment: 'test 1'
+
+for_dealer_payment2:
+  dealer: dealer2
+  status: pending
+  comment: 'test 2'
+
+for_dealer_payment3:
+  dealer: dealer3
+  status: paid
+  confirmed_at: <%= 2.days.ago %>
+  paid_at: <%= 1.days.ago %>
+  confirmed_user: jv_user1
+  paid_user: jv_user1
+  comment: 'test 3'

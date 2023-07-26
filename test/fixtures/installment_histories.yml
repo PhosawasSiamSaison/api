@@ -1,0 +1,130 @@
+# == Schema Information
+#
+# Table name: installment_histories
+#
+#  id                    :bigint(8)        not null, primary key
+#  contractor_id         :bigint(8)
+#  order_id              :bigint(8)
+#  installment_id        :integer
+#  payment_id            :bigint(8)
+#  from_ymd              :string(255)
+#  to_ymd                :string(255)      default("99991231")
+#  paid_principal        :decimal(10, 2)   not null
+#  paid_interest         :decimal(10, 2)   not null
+#  paid_late_charge      :decimal(10, 2)   not null
+#  late_charge_start_ymd :string(8)
+#  deleted               :integer          default(0), not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  operation_updated_at  :datetime
+#  lock_version          :integer          default(0)
+#
+
+order1_installment1_his1:
+  installment: order1_installment1
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order1_installment2_his1:
+  installment: order1_installment2
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order1_installment3_his1:
+  installment: order1_installment3
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+
+order2_installment1_his1:
+  installment: order2_installment1
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order2_installment2_his1:
+  installment: order2_installment2
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order2_installment3_his1:
+  installment: order2_installment3
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+
+order3_installment1_his1:
+  installment: order3_installment1
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order3_installment2_his1:
+  installment: order3_installment2
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order3_installment3_his1:
+  installment: order3_installment3
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+
+order4_installment1_his1:
+  installment: order4_installment1
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order4_installment2_his1:
+  installment: order4_installment2
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order4_installment3_his1:
+  installment: order4_installment3
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+
+order5_installment1_his1:
+  installment: order5_installment1
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order5_installment2_his1:
+  installment: order5_installment2
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0
+
+order5_installment3_his1:
+  installment: order5_installment3
+  from_ymd: '20190101'
+  paid_principal: 0.0
+  paid_interest: 0.0
+  paid_late_charge: 0.0

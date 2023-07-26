@@ -1,0 +1,87 @@
+# == Schema Information
+#
+# Table name: dealer_purchase_of_months
+#
+#  id                   :bigint(8)        not null, primary key
+#  dealer_id            :bigint(8)
+#  month                :string(6)
+#  purchase_amount      :decimal(10, 2)   default(0.0), not null
+#  order_count          :integer          default(0), not null
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+dealer_purchase_of_month_201801:
+  dealer: dealer1
+  month: "201801"
+  purchase_amount: 100000
+  order_count: 100
+
+dealer_purchase_of_month_201802:
+  dealer: dealer1
+  month: "201802"
+  purchase_amount: 130000
+  order_count: 120
+
+dealer_purchase_of_month_201803:
+  dealer: dealer1
+  month: "201803"
+  purchase_amount: 120000
+  order_count: 115
+
+dealer_purchase_of_month_201804:
+  dealer: dealer1
+  month: "201804"
+  purchase_amount: 180000
+  order_count: 150
+
+dealer_purchase_of_month_201805:
+  dealer: dealer1
+  month: "201805"
+  purchase_amount: 250000
+  order_count: 200
+
+dealer_purchase_of_month_201806:
+  dealer: dealer1
+  month: "201806"
+  purchase_amount: 230000
+  order_count: 150
+
+dealer_purchase_of_month_201807:
+  dealer: dealer1
+  month: "201807"
+  purchase_amount: 300000
+  order_count: 130
+
+dealer_purchase_of_month_201808:
+  dealer: dealer1
+  month: "201808"
+  purchase_amount: 400000
+  order_count: 100
+
+dealer_purchase_of_month_201809:
+  dealer: dealer1
+  month: "201809"
+  purchase_amount: 340000
+  order_count: 70
+
+dealer_purchase_of_month_201810:
+  dealer: dealer1
+  month: "201810"
+  purchase_amount: 380000
+  order_count: 50
+
+dealer_purchase_of_month_201811:
+  dealer: dealer1
+  month: "201811"
+  purchase_amount: 500000
+  order_count: 66
+
+dealer_purchase_of_month_201812:
+  dealer: dealer1
+  month: "201812"
+  purchase_amount: 1000000
+  order_count: 100

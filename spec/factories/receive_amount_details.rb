@@ -1,0 +1,54 @@
+# == Schema Information
+#
+# Table name: receive_amount_details
+#
+#  id                        :bigint(8)        not null, primary key
+#  receive_amount_history_id :bigint(8)        not null
+#  order_number              :string(255)
+#  dealer_name               :string(50)
+#  dealer_type               :integer
+#  tax_id                    :string(15)
+#  th_company_name           :string(255)
+#  en_company_name           :string(255)
+#  bill_date                 :string(15)
+#  site_code                 :string(15)
+#  site_name                 :string(255)
+#  product_name              :string(40)
+#  installment_number        :integer
+#  due_ymd                   :string(8)
+#  input_ymd                 :string(8)
+#  switched_date             :datetime
+#  rescheduled_date          :datetime
+#  repayment_ymd             :string(8)
+#  principal                 :decimal(10, 2)
+#  interest                  :decimal(10, 2)
+#  late_charge               :decimal(10, 2)
+#  paid_principal            :decimal(10, 2)
+#  paid_interest             :decimal(10, 2)
+#  paid_late_charge          :decimal(10, 2)
+#  total_principal           :decimal(10, 2)
+#  total_interest            :decimal(10, 2)
+#  total_late_charge         :decimal(10, 2)
+#  exceeded_occurred_amount  :decimal(10, 2)
+#  exceeded_occurred_ymd     :string(8)
+#  exceeded_paid_amount      :decimal(10, 2)
+#  cashback_paid_amount      :decimal(10, 2)
+#  cashback_occurred_amount  :decimal(10, 2)
+#  waive_late_charge         :decimal(10, 2)
+#  contractor_id             :bigint(8)        not null
+#  payment_id                :bigint(8)
+#  order_id                  :bigint(8)
+#  installment_id            :bigint(8)
+#  dealer_id                 :bigint(8)
+#  deleted                   :integer          default(0), not null
+#  created_at                :datetime
+#  updated_at                :datetime
+#  operation_updated_at      :datetime
+#
+
+FactoryBot.define do
+  factory :receive_amount_detail do
+    association :contractor
+    exceeded_occurred_amount { 0 }
+  end
+end

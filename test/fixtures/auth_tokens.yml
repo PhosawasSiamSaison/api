@@ -1,0 +1,49 @@
+# == Schema Information
+#
+# Table name: auth_tokens
+#
+#  id                   :bigint(8)        not null, primary key
+#  tokenable_type       :string(255)
+#  tokenable_id         :bigint(8)
+#  token                :string(30)       not null
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+# JvUser
+jv_user1_token:
+  tokenable: jv_user1 (JvUser)
+  token: sample_s
+
+jv_user2_token:
+  tokenable: jv_user2 (JvUser)
+  token: jv_user2
+
+# ContractorUser
+taro_token:
+  tokenable: taro (ContractorUser)
+  token: taro_token
+
+hanako_token:
+  tokenable: hanako (ContractorUser)
+  token: hanako_token
+
+tom_token:
+  tokenable: tom (ContractorUser)
+  token: tom
+
+ken_token:
+  tokenable: ken (ContractorUser)
+  token: ken
+
+# DealerUser
+dealer_user1_token:
+  tokenable: dealer_user1 (DealerUser)
+  token: sample_d
+
+dealer_user2_token:
+  tokenable: dealer_user2 (DealerUser)
+  token: dealer_user2

@@ -1,0 +1,46 @@
+# == Schema Information
+#
+# Table name: cashback_histories
+#
+#  id                        :bigint(8)        not null, primary key
+#  contractor_id             :integer          not null
+#  point_type                :integer          not null
+#  cashback_amount           :decimal(10, 2)   not null
+#  latest                    :boolean          not null
+#  total                     :decimal(10, 2)   not null
+#  exec_ymd                  :string(8)        not null
+#  notes                     :string(100)
+#  order_id                  :integer
+#  receive_amount_history_id :bigint(8)
+#  deleted                   :integer          default(0), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  operation_updated_at      :datetime
+#  lock_version              :integer          default(0)
+#
+
+cashback_history1_1:
+  contractor: contractor1
+  point_type: gain
+  cashback_amount: 1000.0
+  latest: false
+  total: 1000.0
+  exec_ymd: 20190114
+  order: order1
+
+cashback_history1_2:
+  contractor: contractor1
+  point_type: gain
+  cashback_amount: 500.0
+  latest: false
+  total: 1500.0
+  exec_ymd: 20190115
+  order: order1
+
+cashback_history1_3:
+  contractor: contractor1
+  point_type: use
+  cashback_amount: 400.0
+  latest: true
+  total: 1100.0
+  exec_ymd: 20190116

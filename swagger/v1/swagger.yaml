@@ -1,0 +1,58 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/common/business_ymd":
+    get:
+      summary: business_ymd common
+      responses:
+        '200':
+          description: successful
+  "/api/common/labels":
+    get:
+      summary: labels common
+      responses:
+        '200':
+          description: successful
+  "/api/common/types":
+    get:
+      summary: types common
+      responses:
+        '200':
+          description: successful
+  "/api/common/account_link_image":
+    get:
+      summary: account_link_image common
+      responses:
+        '200':
+          description: successful
+  "/api/common/proc_business_day":
+    get:
+      summary: proc_business_day common
+      responses:
+        '200':
+          description: successful
+  "/api/jv/login/login":
+    post:
+      summary: login login
+      parameters: []
+      responses:
+        '200':
+          description: successful
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_name:
+                  type: string
+                password:
+                  type: string
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000/

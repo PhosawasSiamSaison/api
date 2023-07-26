@@ -1,0 +1,51 @@
+# == Schema Information
+#
+# Table name: dealer_users
+#
+#  id                   :bigint(8)        not null, primary key
+#  dealer_id            :integer          not null
+#  user_type            :integer          not null
+#  user_name            :string(20)
+#  full_name            :string(40)       not null
+#  mobile_number        :string(11)
+#  email                :string(200)
+#  agreed_at            :datetime
+#  password_digest      :string(255)      not null
+#  temp_password        :string(255)
+#  create_user_type     :string(255)
+#  create_user_id       :integer          not null
+#  update_user_type     :string(255)
+#  update_user_id       :integer          not null
+#  deleted              :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  operation_updated_at :datetime
+#  lock_version         :integer          default(0)
+#
+
+dealer_user1:
+  dealer: dealer1
+  user_type: owner
+  user_name: dealer_user1
+  full_name: DealerUser1
+  mobile_number: "00000000010"
+  email: "example@example.com"
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('password') %>
+  temp_password: ""
+  create_user: jv_user1 (JvUser)
+  update_user: jv_user1 (JvUser)
+
+dealer_user2:
+  dealer: dealer1
+  user_type: osr
+  user_name: dealer_user2
+  full_name: DealerUser2
+  mobile_number: "00000000020"
+  email: "example@example.com"
+  agreed_at: <%= 1.day.ago %>
+  password_digest: <%= BCrypt::Password.create('password') %>
+  temp_password: ""
+  create_user: dealer_user1 (DealerUser)
+  update_user: dealer_user1 (DealerUser)
+
