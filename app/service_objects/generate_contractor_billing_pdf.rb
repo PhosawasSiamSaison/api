@@ -52,7 +52,7 @@ class GenerateContractorBillingPDF
         pdf.font_size font_size(16)
         pdf.text "ใบแจ้งยอดรายการเซย์ซอนเครดิต/ใบแจ้งหนี้", align: :right
 
-        pdf.image 'public/pdf/saison_logo2.png', position: :center, width: 80
+        pdf.image 'public/pdf/saison_logo2.png', position: :right, width: 80
         pdf.move_down 5
 
         pdf.font_size font_size(11)
@@ -60,7 +60,7 @@ class GenerateContractorBillingPDF
 
         pdf.text "เลขที่ 1 ถนนปูนซิเมนต์ไทย บางซื่อ กรุงเทพฯ 10800", align: :right
 
-        pdf.text "โทรศัพท์ 02-586-3021", align: :right
+        pdf.text "โทรศัพท์ 02-096-3121", align: :right
 
         pdf.font_size font_size(9)
         pdf.text "เวลาทำการ จันทร์ - ศุกร์ 09.00 - 17.00 ยกเว้นวันหยุดนักขัตฤกษ์", align: :right

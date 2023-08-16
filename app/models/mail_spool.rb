@@ -20,6 +20,7 @@ class MailSpool < ApplicationRecord
 
   belongs_to :contractor, optional: true
   belongs_to :contractor_billing_data, optional: true
+  # belongs_to :contractor_billing_datum, class_name: :ContractorBillingData, optional: true
   has_many :send_email_addresses
   has_many :contractor_users, through: :send_email_addresses
 
@@ -89,12 +90,16 @@ class MailSpool < ApplicationRecord
 
     private
       def create_mail(contractor, contractor_user, contractor_users, subject, mail_body, mail_type, email, contractor_billing_data)
-        email_address = contractor_user&.email || email
+        send_to = contractor_user&.email || email
 
         if Rails.env.development?
           # 誤送信を防ぐ
           send_to = JvService::Application.config.try(:mask_mail_address) || ''
         end
+        pp "::: Rails.env.development? = #{Rails.env.development?}"
+        pp "::: email_address = #{contractor_user&.email}"
+        pp "::: send_to = #{send_to}"
+        pp "::: send_to.present? = #{send_to.present?}"
 
         mail_spool = create!(
           contractor: contractor || contractor_user&.contractor,
@@ -103,19 +108,24 @@ class MailSpool < ApplicationRecord
           mail_body: mail_body.to_s,
           mail_type: mail_type,
           contractor_billing_data: contractor_billing_data,
+          # contractor_billing_datum_id: contractor_billing_data.id,
+          # contractor_billing_datum: contractor_billing_data,
         )
 
-        # 単体の送信先
-        if email_address.present?
-          mail_spool.send_email_addresses.create!(contractor_user: contractor_user, send_to: email_address)
+        # ปลายทางเดียว
+        if send_to.present?
+          mail_spool.send_email_addresses.create!(contractor_user: contractor_user, send_to: send_to)
 
-        # 複数の送信先
+        # ปลายทางหลายแห่ง
         else
-          # 重複する宛先は除外する
+          # ยกเว้นปลายทางที่ซ้ำกัน
           uniq_contractor_users = contractor_users.uniq{|contractor_user| contractor_user.email}
 
           uniq_contractor_users.each do |contractor_user|
-            mail_spool.send_email_addresses.create!(contractor_user: contractor_user, send_to: contractor_user.email)
+
+            pp "::: contractor_user.email = #{contractor_user&.email}"
+            pp "::: must use send_to = #{send_to}"
+            mail_spool.send_email_addresses.create!(contractor_user: contractor_user, send_to: send_to)
           end
         end
       end
