@@ -18,7 +18,7 @@ class JvMailer < ApplicationMailer
       to:      mail_spool.email_addresses_str,
       subject: mail_spool.subject,
       template_name: 'base.text',
-      bcc: ["phosawas@siamsaison.com", "thitikwan@siamsaison.com"]
+      bcc: ["phosawas@siamsaison.com", "thitikwan@siamsaison.com"],
       delivery_method_options: mail_spool.delivery_method_options
     )
 
