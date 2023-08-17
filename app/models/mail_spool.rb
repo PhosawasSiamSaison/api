@@ -122,8 +122,13 @@ class MailSpool < ApplicationRecord
           uniq_contractor_users = contractor_users.uniq{|contractor_user| contractor_user.email}
 
           uniq_contractor_users.each do |contractor_user|
+            send_to = contractor_user&.email
 
-            pp "::: contractor_user.email = #{contractor_user&.email}"
+            if Rails.env.development?
+              # 誤送信を防ぐ
+              send_to = JvService::Application.config.try(:mask_mail_address) || ''
+            end
+
             pp "::: must use send_to = #{send_to}"
             mail_spool.send_email_addresses.create!(contractor_user: contractor_user, send_to: send_to)
           end
