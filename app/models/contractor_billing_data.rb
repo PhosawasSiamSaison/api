@@ -82,12 +82,12 @@ class ContractorBillingData < ApplicationRecord
       billing_data = find_by(contractor: payment.contractor, due_ymd: payment.due_ymd)
 
       if billing_data.present?
-        # 既存のPaymentに１５日商品が追加された場合
+        # เมื่อเพิ่มผลิตภัณฑ์ที่ 15 ในการชำระเงินที่มีอยู่
         if payment.has_15day_products?
-          # 作り直すために削除する
+          # ลบเพื่อสร้างใหม่
           billing_data.delete
         else
-          # 15日商品がなければ処理しない
+          # หากไม่มีสินค้าภายใน 15 วัน จะไม่สามารถดำเนินการได้
           return
         end
       end

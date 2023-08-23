@@ -210,6 +210,7 @@ module CsvModule
     CSV.generate(csv_params) { |csv|
       # ヘッダ行
       csv << [
+        'Contractor ID',
         'Due Date',
         'Paid up Date',
         'Total principal',
@@ -219,7 +220,7 @@ module CsvModule
         'Total balance',
         'TAXID',
         'Company Name (TH)',
-        'Company Name (EN)',
+        'Company Name (EN)'
       ]
 
       today_ymd = BusinessDay.today_ymd
@@ -227,6 +228,7 @@ module CsvModule
       # ボディ行
       Payment.due_basis_data.each { |payment|
         csv << [
+          payment.contractor.id,
           payment.due_ymd,
           payment.paid_up_ymd || 'None',
           payment.total_principal,

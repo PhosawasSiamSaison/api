@@ -422,7 +422,7 @@ class Order < ApplicationRecord
     due_ymds = product.calc_due_ymds(next_closing_ymd)
 
     installments.each do |installment|
-      # 所属しているPaymentからinstallmentを取り除く
+      # ลบการผ่อนชำระออกจากการชำระเงินที่เป็นของ
       installment.remove_from_payment
 
       # 新しい約定日
