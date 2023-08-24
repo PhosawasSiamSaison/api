@@ -1,0 +1,20 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/www/api
+    file_exists_behavior: OVERWRITE
+permissions:
+  - object: /var/www/api
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+    mode: 775
+hooks:
+  AfterInstall:
+    - location: scripts/dependencies_install.sh
+      runas: ubuntu
+    # - location: scripts/set_environment_variables.sh
+    #   runas: ubuntu
+    # - location: scripts/restart_apache.sh
+    #   runas: ubuntu

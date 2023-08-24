@@ -55,3 +55,12 @@ production:
   username: <%= ENV['JV_DB_USER'] %>
   password: <%= ENV['JV_DB_PASS'] %>
   host:     <%= ENV['JV_DB_HOST'] %>
+
+staging:
+  <<: *default
+  database: <%= ENV['JV_DB_NAME'] %>
+  pool:     <%= ENV['JV_DB_POOL'] %>
+  username: <%= ENV['JV_DB_USER'] %>
+  password: <%= ENV['JV_DB_PASS'] %>
+  host:     <%= ENV['JV_DB_HOST'] %>
+  port: 3306
