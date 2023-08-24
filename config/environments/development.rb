@@ -12,6 +12,13 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  config.before_configuration do
+    env_file = File.join(Rails.root, 'config', 'local_env.yml')
+    YAML.load(File.open(env_file)).each do |key, value|
+      ENV[key.to_s] = value
+    end if File.exists?(env_file)
+  end
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
@@ -90,8 +97,8 @@ Rails.application.configure do
 
   # ThaiBulkSMS
   # config.thai_bulk_sms_use_mock_response = true
-  config.thai_bulk_sms_api_key = "qm1k14oSWgqqemLOeMZnMqX1LemzKC"
-  config.thai_bulk_sms_api_secret = "67aIbuDEQn_vT2P03-oZOXQ7RnTmKK"
+  config.thai_bulk_sms_api_key = ENV['JV_THAIBULK_API_KEY']
+  config.thai_bulk_sms_api_secret = ENV['JV_THAIBULK_API_SECRET']
 
   # LINE Bot アカウント
   config.line_bot_basic_id = ENV['LINE_BOT_BASIC_ID'] || '@abcd'
