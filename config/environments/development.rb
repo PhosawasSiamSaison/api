@@ -82,8 +82,8 @@ Rails.application.configure do
   config.country_code = '+81'
 
   # SMS送信フラグ(環境変数から取得)
-  config.send_sms = ENV['mask_mobile_number'].present?
-  config.mask_mobile_number = ENV['mask_mobile_number']
+  config.send_sms = ENV['MASK_MOBILE_NUMBER'].present?
+  config.mask_mobile_number = ENV['MASK_MOBILE_NUMBER']
   # AWSのSMS制限の回避を有効にする
   config.delay_batch_send_sms = false
   # SMSを送信しない電話番号
