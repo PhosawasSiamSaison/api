@@ -2,4 +2,4 @@ export PATH=/home/ubuntu/.rvm/gems/ruby-2.7.8/bin:/home/ubuntu/.rvm/gems/ruby-2.
 
 cd /var/www/api/
 # gem install bundler — user-install
-bundle install
+# bundle install
