@@ -4,7 +4,7 @@ function set_parameter {
   SSM_VALUE=`aws ssm get-parameters --name "${SSM_PARAM_NAME}" --query 'Parameters[*].Value' --output text`
   [ "$(eval echo "$"$1)" == "" ] && echo "export ${SSM_PARAM_NAME}=${SSM_VALUE}" >> ~/.bash_profile
 }
-# echo "export RAILS_ENV=staging" >> ~/.bashrc
+
 set_parameter "JV_DB_HOST"
 set_parameter "JV_DB_NAME"
 set_parameter "JV_DB_PASS"
