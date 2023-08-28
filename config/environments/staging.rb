@@ -13,104 +13,38 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
 
-  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
-  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
-
-  # Enable/disable caching. By default caching is disabled.
-  # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
-    config.cache_store = :memory_store
-    config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
-    }
-  else
-    config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
-  end
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :amazon
 
-    # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = ENV['JV_LOG_LEVEL']
+  # Print deprecation notices to the Rails logger.
+  config.active_support.deprecation = :log
 
-  # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  # Raise an error on page load if there are pending migrations.
+  config.active_record.migration_error = :page_load
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  config.active_job.queue_adapter = :sidekiq
-  # config.active_job.queue_name_prefix = "jv_service_production"
-
-  config.action_mailer.perform_caching = false
-
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  config.action_mailer.raise_delivery_errors = true
-
-  # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation cannot be found).
-  config.i18n.fallbacks = true
-
-  # Send deprecation notices to registered listeners.
-  config.active_support.deprecation = :notify
-
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
-
-  # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
-  config.logger = Logger.new("log/production.log", 'daily')
-
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
-  end
-
-  # Do not dump schema after migrations.
-  config.active_record.dump_schema_after_migration = false
-
-  # Inserts middleware to perform automatic connection switching.
-  # The `database_selector` hash is used to pass options to the DatabaseSelector
-  # middleware. The `delay` is used to determine how long to wait after a write
-  # to send a subsequent read to the primary.
-  #
-  # The `database_resolver` class is used by the middleware to determine which
-  # database is appropriate to use based on the time delay.
-  #
-  # The `database_resolver_context` class is used by the middleware to set
-  # timestamps for the last write to the primary. The resolver uses the context
-  # class timestamps to determine how long to wait before reading from the
-  # replica.
-  #
-  # By default Rails will store a last write timestamp in the session. The
-  # DatabaseSelector middleware is designed as such you can define your own
-  # strategy for connection switching and pass that into the middleware through
-  # these configuration options.
-  # config.active_record.database_selector = { delay: 2.seconds }
-  # config.active_record.database_resolver = ActiveRecord::Middleware::DatabaseSelector::Resolver
-  # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
+  # 同期処理にする
+  config.active_job.queue_adapter = :sidekiq # or :sidekiq
 
 
-  config.time_zone = 'Bangkok'
-  config.active_record.default_timezone = :local
+  # Raises error for missing translations
+  # config.action_view.raise_on_missing_translations = true
 
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # RUDY テスト用のパラメーターでリクエストをする
+  config.rudy_use_test_params = false
   # RUDY RUDYからのリクエスト用のAPIのBearerのキー
   config.rudy_api_auth_key = 'ahb7air2leiki6choh5chei2tiexea5eif1zaeciechie0ainahfijaiyoqu4oop'
   # RUDY (デモ用)RUDYからのリクエスト用のAPIのBearerのキー
   config.rudy_demo_api_auth_key = 'dm1riodl4wfwkcy2t1cd6aoiec51f9hr00gbwog3ip2rkork2501u60785xhup75'
-
   # RUDY ホスト
   config.rudy_host = 'https://test-api.merudy.com'
-  # RUDY テスト用のパラメーターでリクエストをする
-  config.rudy_use_test_params = ENV['JV_USE_RUDY_TEST_PARAM'].present?
 
   # RUDY RUDYからのリクエスト用のAPIのBearerのキー
   config.rudy_api_auth_key = 'ahb7air2leiki6choh5chei2tiexea5eif1zaeciechie0ainahfijaiyoqu4oop'
@@ -137,11 +71,9 @@ Rails.application.configure do
   config.send_sms = ENV['MASK_MOBILE_NUMBER'].present?
   config.mask_mobile_number = ENV['MASK_MOBILE_NUMBER']
   # AWSのSMS制限の回避を有効にする
-  config.delay_batch_send_sms = true
-
+  config.delay_batch_send_sms = false
   # SMSを送信しない電話番号
-config.not_send_mobile_numbers = ['9999999999','8888888888','7777777777','6666666666','5555555555']
-
+  config.not_send_mobile_numbers = ['9999999999','8888888888','7777777777','6666666666','5555555555']
 
   # AWS
   config.aws_access_key_id     = Rails.application.credentials.dig(:aws, :access_key_id)
@@ -191,6 +123,7 @@ config.not_send_mobile_numbers = ['9999999999','8888888888','7777777777','666666
   # SMTP settings for gmail
   config.action_mailer.default_url_options = { :host => 'localhost:3000', protocol: 'http' }
   
+  # SMTP settings for gmail
   config.action_mailer.smtp_settings = {
     :delivery_method      => :smtp,
     :address              => "smtp.office365.com",
