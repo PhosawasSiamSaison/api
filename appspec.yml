@@ -12,9 +12,9 @@ permissions:
     mode: 775
 hooks:
   AfterInstall:
-    # - location: scripts/dependencies_install.sh
-    #   runas: ubuntu
-    # - location: scripts/set_environment_variables.sh
-    #   runas: ubuntu
+    - location: scripts/dependencies_install.sh
+      runas: ubuntu
+    - location: scripts/set_environment_variables.sh
+      runas: ubuntu
     - location: scripts/restart_apache.sh
       runas: ubuntu
