@@ -157,6 +157,10 @@ SystemSetting.create!(
   credit_limit_additional_rate: 1.05,
   cbm_terms_of_service_version: 1,
   cpac_terms_of_service_version: 1,
+  front_jv_version: "front_jv_version_1",
+  front_c_version: "front_c_version_1",
+  front_d_version: "front_d_version_1",
+  front_pm_version: "front_pm_version_1"
 )
 
 # RUDY-API設定
