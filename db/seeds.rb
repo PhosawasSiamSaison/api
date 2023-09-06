@@ -348,3 +348,59 @@ global_available_setting_data = %w(normal sub_dealer individual government).map{
 
 GlobalAvailableSetting.insert_category_data(global_available_setting_data)
 
+pm1 = ProjectManager.create!(
+  tax_id: "9999999999000",
+  shop_id: "202",
+  project_manager_name: "CPAC Solutions",
+  dealer_type: 6
+)
+
+pm2 = ProjectManager.create!(
+  tax_id: "8888888888000",
+  shop_id: "223",
+  project_manager_name: "B2B",
+  dealer_type: 7
+)
+
+pm3 = ProjectManager.create!(
+  tax_id: "1111111111000",
+  shop_id: "308",
+  project_manager_name: "Government",
+  dealer_type: 14
+)
+
+ProjectManagerUser.create!(
+  project_manager_id: pm2.id,
+  user_type: 1,
+  user_name: "B2B",
+  full_name: "B2B",
+  mobile_number: "0805752869",
+  email: "b2badmin@gmail.com",
+  create_user_id: 1,
+  update_user_id: 1,
+  password: "saison2019"
+)
+
+ProjectManagerUser.create!(
+  project_manager_id: pm1.id,
+  user_type: 1,
+  user_name: "CPSL",
+  full_name: "CPSL",
+  mobile_number: "0805752869",
+  email: "cpsadmin@gmail.com",
+  create_user_id: 1,
+  update_user_id: 1,
+  password: "saison2019"
+)
+
+ProjectManagerUser.create!(
+  project_manager_id: pm3.id,
+  user_type: 1,
+  user_name: "GOV",
+  full_name: "GOV",
+  mobile_number: "0805752869",
+  email: "govadmin@gmail.com",
+  create_user_id: 1,
+  update_user_id: 1,
+  password: "saison2019"
+)
