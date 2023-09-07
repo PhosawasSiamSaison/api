@@ -1,0 +1,2 @@
+class CalculateProjectAndInstallment < ApplicationRecord
+end

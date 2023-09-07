@@ -1,0 +1,2 @@
+class CalculateProjectLateCharge < ApplicationRecord
+end

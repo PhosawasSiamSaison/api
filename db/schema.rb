@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_12_095742) do
+ActiveRecord::Schema.define(version: 2023_09_06_075848) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name", null: false
@@ -170,6 +170,55 @@ ActiveRecord::Schema.define(version: 2023_07_12_095742) do
     t.boolean "is_exemption_late_charge", default: false
     t.decimal "exemption_late_charge", precision: 10, scale: 2, default: "0.0"
     t.decimal "total_exemption_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "calculate_project_and_installments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.integer "installment_id"
+    t.string "business_ymd", limit: 8
+    t.string "payment_ymd", limit: 8
+    t.string "due_ymd", limit: 8
+    t.decimal "input_amount", precision: 10, scale: 2, default: "0.0"
+    t.decimal "remaining_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "after_remaining_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "payment_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "after_input_amount_remaining_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "remaining_interest", precision: 10, scale: 2, default: "0.0"
+    t.decimal "after_remaining_interest", precision: 10, scale: 2, default: "0.0"
+    t.decimal "after_input_amount_remaining_interest", precision: 10, scale: 2, default: "0.0"
+    t.decimal "remaining_principal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "after_remaining_principal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "after_input_amount_remaining_principal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "paid_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "paid_interest", precision: 10, scale: 2, default: "0.0"
+    t.decimal "paid_principal", precision: 10, scale: 2, default: "0.0"
+    t.decimal "paid_total_amount", precision: 10, scale: 2, default: "0.0"
+    t.decimal "refund_amount", precision: 10, scale: 2, default: "0.0"
+    t.boolean "is_exemption_late_charge", default: false
+    t.decimal "exemption_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "total_exemption_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "calculate_project_late_charges", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.integer "calculate_project_and_installment_id", null: false
+    t.integer "installment_id", null: false
+    t.string "payment_ymd", limit: 8, null: false
+    t.string "due_ymd", limit: 8, null: false
+    t.string "late_charge_start_ymd", limit: 8
+    t.string "calc_start_ymd", limit: 8
+    t.integer "late_charge_days"
+    t.integer "delay_penalty_rate"
+    t.decimal "remaining_amount_without_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.string "calced_amount"
+    t.string "calced_days"
+    t.decimal "original_late_charge_amount", precision: 10, scale: 2, default: "0.0"
+    t.decimal "calc_paid_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "paid_late_charge_before_late_charge_start_ymd", precision: 10, scale: 2, default: "0.0"
+    t.decimal "calc_late_charge", precision: 10, scale: 2, default: "0.0"
+    t.decimal "remaining_late_charge", precision: 10, scale: 2, default: "0.0"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
