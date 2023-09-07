@@ -493,19 +493,14 @@ class Contractor < ApplicationRecord
   # 上限の確認
   def over_credit_limit?(amount)
     # 通常の申し込み（オンライン申し込み以外）はチェックしない
-    pp "::: amount = #{amount}"
     return false unless use_only_credit_limit
 
     # VAT?の分の枠を広げる
     expanded_credit_limit_amount =
       BigDecimal(credit_limit_amount.to_s) * SystemSetting.credit_limit_additional_rate
 
-    pp "::: expanded_credit_limit_amount = #{expanded_credit_limit_amount}"
-
     # 利用可能限度枠から残りの返済額を引く(マイナスは0にする)
     available_balance = [(expanded_credit_limit_amount - remaining_principal).round(2), 0].max
-
-    pp "::: available_balance = #{available_balance}"
 
     available_balance < amount
   end
@@ -567,29 +562,18 @@ class Contractor < ApplicationRecord
     # オンラインの申し込みではチェックなし
     return false if use_only_credit_limit
 
-    pp "::: amount = #{amount}"
-
     dealer_type_limit_amount = dealer_type_limit_amount(dealer_type)
     dealer_type_remaining_principal = dealer_type_remaining_principal(dealer_type)
-
-    pp "::: dealer_type_limit_amount = #{dealer_type_limit_amount}"
-    pp "::: dealer_type_remaining_principal = #{dealer_type_remaining_principal}"
 
     expanded_credit_limit_amount =
       BigDecimal(dealer_type_limit_amount.to_s) * SystemSetting.credit_limit_additional_rate
 
-      pp "::: expanded_credit_limit_amount = #{expanded_credit_limit_amount}"
-
     # recreateの場合は現在購入金額を引く
     remaining_principal = dealer_type_remaining_principal - subtraction_amount
-
-    pp "::: remaining_principal = #{remaining_principal}"
 
     # 利用可能限度枠から残りの返済額を引く(マイナスは0にする)
     dealer_type_available_balance =
       [(expanded_credit_limit_amount - remaining_principal).round(2), 0].max
-
-    pp "::: dealer_type_available_balance = #{dealer_type_available_balance}"
 
     dealer_type_available_balance < amount
   end
@@ -644,31 +628,20 @@ class Contractor < ApplicationRecord
   # subtraction_amount はrecreateで使用
   def over_dealer_limit?(dealer, amount, subtraction_amount: 0)
     # オンラインの申し込みではチェックなし
-    pp "::: amount = #{amount}"
-
     return false if use_only_credit_limit
 
     dealer_limit_amount = dealer_limit_amount(dealer)
     dealer_remaining_principal = dealer_remaining_principal(dealer)
 
-    pp "::: dealer_limit_amount = #{dealer_limit_amount}"
-    pp "::: dealer_remaining_principal = #{dealer_remaining_principal}"
-
     expanded_credit_limit_amount =
       BigDecimal(dealer_limit_amount.to_s) * SystemSetting.credit_limit_additional_rate
-
-    pp "::: expanded_credit_limit_amount = #{expanded_credit_limit_amount}"
 
     # recreateの場合は現在購入金額を引く
     remaining_principal = dealer_remaining_principal - subtraction_amount
 
-    pp "::: remaining_principal = #{remaining_principal}"
-
     # 利用可能限度枠から残りの返済額を引く(マイナスは0にする)
     dealer_available_balance =
       [(expanded_credit_limit_amount - remaining_principal).round(2), 0].max
-
-    pp "::: dealer_available_balance = #{dealer_available_balance}"
 
     dealer_available_balance < amount
   end

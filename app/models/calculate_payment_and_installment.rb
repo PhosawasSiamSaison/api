@@ -1,2 +1,0 @@
-class CalculatePaymentAndInstallment < ApplicationRecord
-end

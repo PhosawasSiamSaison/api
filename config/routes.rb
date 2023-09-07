@@ -1,8 +1,6 @@
 require "sidekiq/web"
 
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
   mount Sidekiq::Web => '/sidekiq' if Rails.env.development?
 
   scope :api do
@@ -18,33 +16,6 @@ Rails.application.routes.draw do
 
         # 開発用
         get :proc_business_day if Rails.env.development?
-      end
-    end
-
-    resources :check_calculate, only: [] do
-      collection do
-        get :check_over_dealer_limit
-        get :check_dealer_remaining_principal
-        get :check_over_dealer_type_limit
-        get :check_dealer_type_remaining_principal
-        get :check_over_credit_limit
-        get :check_remaining_principal
-        get :checks_due_ymds
-        get :checks_interest
-        get :check_amari
-        get :check_one_installment_amount_for_installment_principal
-        get :check_one_installment_amount_for_installment_interest
-        get :check_installment_amounts
-        get :check_calc_payment_subtractions
-        get :check_calc_paid_late_charge
-        get :check_calc_remaining_amount_without_late_charge
-        get :check_calc_start_ymd
-        get :check_calc_late_charge_days
-        get :check_calc_late_charge
-        get :check_calc_remaining_late_charge
-        get :check_calc_subtract
-        get :check_find_receive_amount_detail_data
-        # get :available_settings_detail_csv
       end
     end
 
@@ -459,13 +430,6 @@ Rails.application.routes.draw do
           post :receive_payment
           get :receive_amount_history
           patch :update_history_comment
-        end
-      end
-
-      resources :export_csv_calculate, only: [] do
-        collection do
-          get :download_available_settings_detail_csv
-          get :download_calculate_payment_and_installment
         end
       end
     end

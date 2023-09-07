@@ -1,2 +1,0 @@
-class CalculateLateCharge < ApplicationRecord
-end

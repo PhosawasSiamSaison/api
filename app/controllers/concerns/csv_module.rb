@@ -85,56 +85,6 @@ module CsvModule
     send_csv(data, filename)
   end
 
-  # send_available_settings_detail_csv
-  def send_available_settings_detail_csv(available_settings)
-    data = available_settings_detail_data(available_settings)
-    filename = "available_settings_detail_#{filename_date}.csv"
-
-    send_csv(data, filename)
-  end
-
-  def send_calculate_payment_and_installment(payment = nil)
-    data = calculate_payment_and_installment(payment)
-    filename = "calculate_payment_and_installment_#{filename_date}.csv"
-
-    send_csv(data, filename)
-  end
-
-  def calculate_payment_and_installment(payment = nil)
-    CSV.generate(csv_params) { |csv|
-      # ヘッダ行
-      attributes = CalculatePaymentAndInstallment.attribute_names
-                    .reject { |el| ["created_at", "updated_at"].include?(el) }
-      csv << attributes
-
-      calculate_records = payment ? 
-              CalculatePaymentAndInstallment.where(payment_id: payment.id) :
-              CalculatePaymentAndInstallment.all
-
-      calculate_records.each { |calculate_record| 
-        csv << attributes.map{ |attr| 
-          calculate_record.send(attr) 
-        }
-      }
-    }
-  end
-
-  def available_settings_detail_data(available_settings)
-    CSV.generate(csv_params) { |csv|
-      # ヘッダ行
-      csv << [
-        'Dealer Type',
-        'Available',
-      ]
-
-      available_settings[:cashback][:dealer_types].each { |dealer_type|
-        csv << [
-          dealer_type[:dealer_type_label][:label],
-          !!dealer_type[:available] ? "Y" : "N",
-        ]
-      }
-    }
-  end
 
   def order_list_data(orders)
     CSV.generate(csv_params) { |csv|
@@ -210,7 +160,6 @@ module CsvModule
     CSV.generate(csv_params) { |csv|
       # ヘッダ行
       csv << [
-        'Contractor ID',
         'Due Date',
         'Paid up Date',
         'Total principal',
@@ -220,7 +169,7 @@ module CsvModule
         'Total balance',
         'TAXID',
         'Company Name (TH)',
-        'Company Name (EN)'
+        'Company Name (EN)',
       ]
 
       today_ymd = BusinessDay.today_ymd
@@ -228,7 +177,6 @@ module CsvModule
       # ボディ行
       Payment.due_basis_data.each { |payment|
         csv << [
-          payment.contractor.id,
           payment.due_ymd,
           payment.paid_up_ymd || 'None',
           payment.total_principal,
@@ -669,10 +617,6 @@ module CsvModule
   end
 
   def send_csv(csv, file_name)
-    pp "::: bom"
-    pp bom
-    pp "::: csv"
-    pp csv
     send_data(bom + csv, type: 'text/csv', filename: file_name)
   end
 

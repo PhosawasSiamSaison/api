@@ -13,7 +13,6 @@ class AppropriatePaymentToInstallments
 
     # 履歴データ作成の入れ物
     @receive_amount_detail_data_arr = []
-    @calculate_record_arr = []
   end
 
   def call
@@ -63,42 +62,19 @@ class AppropriatePaymentToInstallments
 
         # 遅損金の充当
         installments.each do |installment|
-          calculate_record = CalculatePaymentAndInstallment.create!(
-            payment_id: payment.id,
-            installment_id: installment.id,
-            is_exemption_late_charge: is_exemption_late_charge,
-            input_amount: input_amount,
-            total_exceeded: contractor.exceeded_amount,
-            total_cashback: contractor.cashback_amount,
-            subtract_exceeded: payment_subtraction[:exceeded],
-            subtract_cashback: payment_subtraction[:cashback],
-            payment_ymd: payment_ymd,
-            business_ymd: BusinessDay.today_ymd,
-            due_ymd: installment.due_ymd
-          )
-          calculate_record_arr << calculate_record
-
           # 遅延のみ処理をする
           next unless payment.over_due?
 
           # 遅損金の支払い残金
           remaining_late_charge = installment.calc_remaining_late_charge(payment_ymd)
-          calculate_record.remaining_late_charge = remaining_late_charge
-
-          # update remaining_late_charge to check calculate to make sure that this value not being skip in next line
-          calculate_record.save!
-
           # 遅損金なしは処理しない
           next if remaining_late_charge == 0
 
-          # calculate_late_charges
-          create_calculate_late_charges_record(installment, calculate_record)
-
-          # การลบแต่ละจำนวน
+          # 各金額の減算処理
           after_remaining_late_charge, after_exceeded, after_cashback, after_input_amount =
             calc_subtract(remaining_late_charge, exceeded, cashback, input_amount)
 
-          # จำนวนเงินที่ต้องจ่าย
+          # 支払う金額
           payment_late_charge = (remaining_late_charge - after_remaining_late_charge).round(2).to_f
 
           # 履歴データの取得
@@ -113,11 +89,6 @@ class AppropriatePaymentToInstallments
             receive_amount_detail_data[:waive_late_charge] = remaining_late_charge
 
             total_exemption_late_charge += remaining_late_charge
-
-            calculate_record.exemption_late_charge = remaining_late_charge
-            calculate_record.total_exemption_late_charge = total_exemption_late_charge
-            calculate_record.save!
-
             next
           end
 
@@ -140,7 +111,7 @@ class AppropriatePaymentToInstallments
           installment.used_exceeded += paid_exceeded unless installment.used_exceeded.nil?
           installment.used_cashback += paid_cashback unless installment.used_cashback.nil?
 
-          # การผ่อนชำระและการอัปเดตประวัติการผ่อนชำระ
+          # InstallmentのとInstallmentHistoryの更新
           installment.save_with_history(payment_ymd)
 
           # Payment を更新
@@ -157,25 +128,11 @@ class AppropriatePaymentToInstallments
           receive_amount_detail_data[:exceeded_paid_amount] += paid_exceeded
           receive_amount_detail_data[:cashback_paid_amount] += paid_cashback
 
-          calculate_record.update(
-            payment_late_charge: payment_late_charge,
-            after_remaining_late_charge: after_remaining_late_charge,
-            after_input_amount_remaining_late_charge: after_input_amount,
-            after_exceeded_remaining_late_charge: after_exceeded,
-            after_cashback_remaining_late_charge: after_cashback,
-            paid_exceeded_remaining_late_charge: paid_exceeded,
-            paid_cashback_remaining_late_charge: paid_cashback,
-            paid_total_exceeded: paid_total_exceeded,
-            paid_total_cashback: paid_total_cashback
-          )
-          calculate_record.save!
-
           break if (input_amount + exceeded + cashback).round(2) == 0
         end
 
         # 利息と元本の充当
         installments.reload.each do |installment|
-          calculate_record = find_calculate_record(installment.id)
           ## 利息
           # 利息の支払い残金
           remaining_interest = installment.remaining_interest
@@ -200,17 +157,6 @@ class AppropriatePaymentToInstallments
           # 支払い済みに足す
           installment.paid_interest += payment_interest
 
-          calculate_record.update(
-            remaining_interest: remaining_interest,
-            after_remaining_interest: after_remaining_interest,
-            after_input_amount_remaining_interest: input_amount,
-            after_exceeded_remaining_interest: after_exceeded,
-            after_cashback_remaining_interest: after_cashback,
-            paid_exceeded_remaining_interest: paid_exceeded,
-            paid_cashback_remaining_interest: paid_cashback,
-            # paid_total_exceeded: paid_exceeded,
-            # paid_total_cashback: paid_total_cashback
-          )
 
           ## 元本
           # 元本の支払い残金
@@ -239,18 +185,6 @@ class AppropriatePaymentToInstallments
           # Adjust Repayment対応前のinstallmentデータのカラムはNULLの想定なので追加しない
           installment.used_exceeded += paid_exceeded unless installment.used_exceeded.nil?
           installment.used_cashback += paid_cashback unless installment.used_cashback.nil?
-
-          calculate_record.update(
-            remaining_principal: remaining_principal,
-            after_remaining_principal: after_remaining_principal,
-            after_input_amount_remaining_principal: input_amount,
-            after_exceeded_remaining_principal: after_exceeded,
-            after_cashback_remaining_principal: after_cashback,
-            paid_exceeded_remaining_principal: paid_exceeded,
-            paid_cashback_remaining_principal: paid_cashback,
-            # paid_total_exceeded: paid_exceeded,
-            # paid_total_cashback: paid_total_cashback
-          )
 
           # installmentの支払い完了
           if installment.paid_principal == installment.principal
@@ -289,13 +223,6 @@ class AppropriatePaymentToInstallments
           receive_amount_detail_data[:paid_principal] = payment_principal if payment_principal > 0
           receive_amount_detail_data[:exceeded_paid_amount] += paid_exceeded
           receive_amount_detail_data[:cashback_paid_amount] += paid_cashback
-
-          calculate_record.paid_total_exceeded += paid_exceeded
-          calculate_record.paid_total_cashback += paid_cashback
-          calculate_record.paid_exceeded_and_cashback_amount = 
-            calculate_record.paid_total_exceeded + calculate_record.paid_total_cashback
-          calculate_record.gain_exceeded_amount = input_amount
-          calculate_record.save!
 
           break if (input_amount + exceeded + cashback).round(2) == 0
         end
@@ -360,9 +287,7 @@ class AppropriatePaymentToInstallments
           # 履歴データ
           installment = order.installments.first
           receive_amount_detail_data = find_receive_amount_detail_data(installment.id)
-          calculate_record = find_calculate_record(installment.id)
           receive_amount_detail_data[:cashback_occurred_amount] = cashback_amount
-          calculate_record.update!(gain_cashback_amount: cashback_amount)
         end
 
         # RUDY API を呼ぶ
@@ -383,10 +308,10 @@ class AppropriatePaymentToInstallments
       contractor.save!
 
 
-      # การสร้างข้อมูลประวัติ
-      # แยกเฉพาะงวดที่ได้รับการขัดถู (และยกเว้น)
+      # 履歴データの作成
+      # 消し込み(と免除)のあったinstallmentのみを抽出
       @receive_amount_detail_data_arr = receive_amount_detail_data_arr.select {|item|
-        # รับเฉพาะรายที่มีจำนวนรายการเริ่มต้นมากกว่า (3)
+        # 初期項目数(3つ)より多いものだけを取得
         item.keys.count > 3
       }
 
@@ -471,38 +396,37 @@ class AppropriatePaymentToInstallments
 
   private
   attr_reader :contractor, :payment_ymd, :payment_amount, :create_user, :comment,
-    :is_exemption_late_charge, :receive_amount_detail_data_arr, :repayment_id, :subtraction_repayment,
-    :calculate_record_arr
+    :is_exemption_late_charge, :receive_amount_detail_data_arr, :repayment_id, :subtraction_repayment
 
   # 指定の金額から減算をした残りの金額を返す
   # exceeded -> cashback -> input_amount(入金額) の順で target_amount(支払額) から引いていく
   def calc_subtract(target_amount, exceeded, cashback, input_amount)
-    # หักเกิน
+    # exceededの減算
     if exceeded > 0
-      # สมดุล
+      # 差引額
       subtract_amount = [target_amount, exceeded].min
 
-      # ใช้กับจำนวนเงินเดิม
+      # 元の額へ適用する
       target_amount = (target_amount - subtract_amount).round(2).to_f
       exceeded = (exceeded - subtract_amount).round(2).to_f
     end
 
-    # การหักเงินคืน
+    # cashbackの減算
     if target_amount > 0 && cashback > 0
-      # สมดุล
+      # 差引額
       subtract_amount = [target_amount, cashback].min
 
-      # ใช้กับจำนวนเงินเดิม
+      # 元の額へ適用する
       target_amount = (target_amount - subtract_amount).round(2).to_f
       cashback = (cashback - subtract_amount).round(2).to_f
     end
 
-    # ลบจำนวนเงินฝาก
+    # 入金額の減算
     if target_amount > 0 && input_amount > 0
-      # สมดุล
+      # 差引額
       subtract_amount = [target_amount, input_amount].min
 
-      # ใช้กับจำนวนเงินเดิม
+      # 元の額へ適用する
       target_amount = (target_amount - subtract_amount).round(2).to_f
       input_amount = (input_amount - subtract_amount).round(2).to_f
     end
@@ -518,53 +442,5 @@ class AppropriatePaymentToInstallments
     receive_amount_detail_data_arr.find do |item|
       item[:installment_id] == installment_id
     end
-  end
-
-  def find_calculate_record(installment_id)
-    calculate_record_arr.find do |item|
-      item.installment_id == installment_id
-    end
-  end
-
-  def create_calculate_late_charges_record(installment, calculate_record)
-    delay_penalty_rate = installment.order.belongs_to_project_finance? ?
-      installment.order.project.delay_penalty_rate : installment.contractor.delay_penalty_rate
-      
-    calced_delay_penalty_rate = delay_penalty_rate / 100.0
-
-    late_charge_days = installment.calc_late_charge_days(payment_ymd)
-    calc_start_ymd = installment.calc_start_ymd(payment_ymd)
-    remaining_amount_without_late_charge = installment.calc_remaining_amount_without_late_charge(payment_ymd)
-    calced_amount = BigDecimal(remaining_amount_without_late_charge.to_s) * calced_delay_penalty_rate
-    calced_days = BigDecimal(late_charge_days.to_s) / 365
-
-    original_late_charge_amount = (calced_amount * calced_days).floor(2).to_f
-    calc_paid_late_charge = installment.calc_paid_late_charge(payment_ymd)
-
-    late_charge_start_ymd = installment.calc_late_charge_start_ymd(payment_ymd)
-    yesterday_start_ymd =
-      late_charge_start_ymd ? Date.parse(late_charge_start_ymd).yesterday.strftime('%Y%m%d') : nil
-    paid_late_charge_before_late_charge_start_ymd = late_charge_start_ymd ?
-      installment.calc_paid_late_charge(yesterday_start_ymd) : nil
-
-    # calculate_late_charges
-    CalculateLateCharge.create!(
-      calculate_payment_and_installment_id: calculate_record.id,
-      installment_id: installment.id,
-      payment_ymd: payment_ymd,
-      due_ymd: installment.due_ymd,
-      late_charge_start_ymd: late_charge_start_ymd,
-      calc_start_ymd: calc_start_ymd,
-      late_charge_days: late_charge_days,
-      delay_penalty_rate: delay_penalty_rate,
-      remaining_amount_without_late_charge: remaining_amount_without_late_charge,
-      calced_amount: calced_amount.to_s,
-      calced_days: calced_days.to_s,
-      original_late_charge_amount: original_late_charge_amount,
-      calc_paid_late_charge: calc_paid_late_charge,
-      paid_late_charge_before_late_charge_start_ymd: paid_late_charge_before_late_charge_start_ymd,
-      calc_late_charge: installment.calc_late_charge(payment_ymd),
-      remaining_late_charge: installment.calc_remaining_late_charge(payment_ymd)
-    )
   end
 end

@@ -67,8 +67,7 @@ class Jv::OrderListController < ApplicationController
         is_product_changed: order.product_changed?,
         is_fee_order: order.fee_order,
         belongs_to_second_dealer: order.second_dealer.present?,
-        belongs_to_project_finance: order.belongs_to_project_finance?,
-        created_at: order.created_at.strftime('%Y-%m-%d %H:%M')
+        belongs_to_project_finance: order.belongs_to_project_finance?
       }
       #
       # 一覧に項目を追加したら CSVにも追加するか確認する
