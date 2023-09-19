@@ -23,6 +23,7 @@ class Jv::DealerRegistrationController < ApplicationController
     dealer.attributes = { create_user_id: login_user.id, update_user_id: login_user.id }
 
     if dealer.save
+      dealer.create_transaction_fee_history
       render json: { success: true }
     else
       render json: { success: false, errors: dealer.error_messages }

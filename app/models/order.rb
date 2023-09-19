@@ -387,8 +387,8 @@ class Order < ApplicationRecord
   end
 
   def can_reschedule?
-    !rescheduled? && # すでに再約定されていないこと
-    !is_applying_change_product # 商品変更の申請中ではないこと
+    !rescheduled? && # ยังไม่ได้ทำสัญญาซ้ำอีกครั้ง
+    !is_applying_change_product # ไม่อยู่ในขั้นตอนการขอเปลี่ยนสินค้า
   end
 
   def canceled?

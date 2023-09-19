@@ -10,6 +10,7 @@ class Batch::Daily
       Batch::CreateContractorBillingZip.exec
       Batch::SavePurchaseData.exec
       Batch::UpdateBusinessDayToNextDay.exec
+      Batch::UpdateTransactionFeeHistoryStatus.exec
       Batch::SendBillingEmail.exec
       # sms and email
       Batch::InformStatement.exec

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_06_075848) do
+ActiveRecord::Schema.define(version: 2023_09_07_072924) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name", null: false
@@ -1183,6 +1183,23 @@ ActiveRecord::Schema.define(version: 2023_09_06_075848) do
     t.integer "lock_version", default: 0
     t.index ["contractor_user_id", "dealer_type", "sub_dealer"], name: "ix_1", unique: true
     t.index ["contractor_user_id"], name: "index_terms_of_service_versions_on_contractor_user_id"
+  end
+
+  create_table "transaction_fee_histories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.integer "dealer_id", null: false
+    t.string "apply_ymd", limit: 8
+    t.decimal "for_normal_rate", precision: 5, scale: 2, default: "2.0", null: false
+    t.decimal "for_government_rate", precision: 5, scale: 2, default: "1.75"
+    t.decimal "for_sub_dealer_rate", precision: 5, scale: 2, default: "1.5"
+    t.decimal "for_individual_rate", precision: 5, scale: 2, default: "1.5"
+    t.text "reason"
+    t.integer "status", limit: 1, default: 0, null: false
+    t.integer "create_user_id"
+    t.integer "update_user_id"
+    t.integer "deleted", limit: 1, default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "lock_version", default: 0
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

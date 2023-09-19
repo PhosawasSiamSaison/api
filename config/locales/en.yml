@@ -279,3 +279,21 @@ en:
 
       project_phase_site:
         phase_limit: Contractor Phase Limit
+
+      transaction_fee_history:
+        apply_ymd: Apply YMD
+
+  errors: &errors
+    format: ! "%{attribute} %{message}"
+    messages:
+      record_invalid: "Validation failed: %{errors}"
+      blank: "can't be blank"
+      invalid: "is invalid"
+      required: "must exist"
+      taken: "has already been taken"
+      too_long:
+        other: "is too long (maximum is %{count} characters)"
+      too_short:
+        other: "is too short (minimum is %{count} characters)"
+      not_a_number: "is not a number"
+      invalid_apply_ymd: "must more than %{ymd}"

@@ -40,6 +40,7 @@ class Dealer < ApplicationRecord
   has_many :dealer_limits
   has_many :eligibilities, through: :dealer_limits
   has_many :sites
+  has_many :transaction_fee_histories
 
   scope :as_first_dealer_orders, -> { orders.where(second_dealer: nil) }
 
@@ -113,6 +114,71 @@ class Dealer < ApplicationRecord
 
       [relation, total_count]
     end
+  end
+
+  def latest_active_transaction_history
+    transaction_fee_histories&.active_transaction&.last
+  end
+
+  def update_latest_transaction_fee_history_status
+    latest_transaction_fee_history = 
+      transaction_fee_histories.find_by(apply_ymd: BusinessDay.today_ymd, status: "scheduled")
+
+    if latest_transaction_fee_history.present?
+      retrie_transaction = latest_active_transaction_history
+      retrie_transaction&.update!(status: "retired")
+
+      latest_transaction_fee_history.update!(status: "active")
+    end
+  end
+
+  def latest_for_normal_rate(input_ymd = nil)
+    start_ymd = "00000000"
+    transaction_history = input_ymd.present? ? 
+                          transaction_fee_histories.apply_ymd_sort.find_by(apply_ymd: start_ymd..input_ymd, status: ["active", "retired"]) :
+                          latest_active_transaction_history
+    
+    transaction_history&.for_normal_rate || self.for_normal_rate
+  end
+
+  def latest_for_government_rate(input_ymd = nil)
+    start_ymd = "00000000"
+    transaction_history = input_ymd.present? ? 
+                          transaction_fee_histories.apply_ymd_sort.find_by(apply_ymd: start_ymd..input_ymd, status: ["active", "retired"]) :
+                          latest_active_transaction_history
+    
+    transaction_history&.for_government_rate || self.for_government_rate
+  end
+
+  def latest_for_sub_dealer_rate(input_ymd = nil)
+    start_ymd = "00000000"
+    transaction_history = input_ymd.present? ? 
+                          transaction_fee_histories.apply_ymd_sort.find_by(apply_ymd: start_ymd..input_ymd, status: ["active", "retired"]) :
+                          latest_active_transaction_history
+    
+    transaction_history&.for_sub_dealer_rate || self.for_sub_dealer_rate
+  end
+
+  def latest_for_individual_rate(input_ymd = nil)
+    start_ymd = "00000000"
+    transaction_history = input_ymd.present? ? 
+                          transaction_fee_histories.apply_ymd_sort.find_by(apply_ymd: start_ymd..input_ymd, status: ["active", "retired"]) :
+                          latest_active_transaction_history
+    
+    transaction_history&.for_individual_rate || self.for_individual_rate
+  end
+
+  def create_transaction_fee_history
+    new_traction = transaction_fee_histories.new(
+      apply_ymd: BusinessDay.today_ymd,
+      for_normal_rate: self.for_normal_rate,
+      for_government_rate: self.for_government_rate,
+      for_sub_dealer_rate: self.for_sub_dealer_rate,
+      for_individual_rate: self.for_individual_rate,
+      reason: 'new transaction',
+      status: 'active'
+    )
+    new_traction.save(validate: false)
   end
 
   def contractors

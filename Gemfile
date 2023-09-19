@@ -59,8 +59,9 @@ gem 'rubyzip'
 # LINE
 gem 'line-bot-api'
 
-group :development, :test, :staging do
+group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'rspec-rails'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'factory_bot_rails', '4.11.1'
 
@@ -73,7 +74,6 @@ end
 
 group :test do
   # Testing
-  gem 'rspec-rails'
   gem 'database_rewinder'
   gem 'timecop'
 end

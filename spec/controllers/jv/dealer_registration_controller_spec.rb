@@ -24,6 +24,10 @@ RSpec.describe Jv::DealerRegistrationController, type: :controller do
 
     describe '正常値' do
       let(:dealer) { Dealer.last }
+      before do
+        FactoryBot.create(:business_day)
+        FactoryBot.create(:system_setting)
+      end
 
       it "登録できること" do
         post :create_dealer, params: default_params

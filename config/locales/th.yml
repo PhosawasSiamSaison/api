@@ -227,6 +227,9 @@ th:
         opened: Open
         closed: Close
 
+    transaction_fee_history:
+      apply_ymd: Apply YMD
+
   select_item:
     repayment_list:
       repayment_status:
@@ -266,6 +269,9 @@ th:
       project_phase_site:
         phase_limit: Contractor Phase Limit
 
+      transaction_fee_history:
+        apply_ymd: Apply YMD
+
   errors: &errors
     format: ! "%{attribute}%{message}"
     messages:
@@ -279,3 +285,4 @@ th:
       too_short:
         other: " is too short (minimum is %{count} characters)"
       not_a_number: " is not a number"
+      invalid_apply_ymd: "must more than %{ymd}"

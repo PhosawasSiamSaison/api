@@ -39,13 +39,13 @@ module DealerPaymentModule
     # Dealer TypeとContractorの属性で割合を分岐する
     rate =
       if contractor.normal?
-        dealer.for_normal_rate
+        dealer.latest_for_normal_rate(input_ymd)
       elsif contractor.government?
-        dealer.for_government_rate
+        dealer.latest_for_government_rate(input_ymd)
       elsif contractor.sub_dealer?
-        dealer.for_sub_dealer_rate
+        dealer.latest_for_sub_dealer_rate(input_ymd)
       elsif contractor.individual?
-        dealer.for_individual_rate
+        dealer.latest_for_individual_rate(input_ymd)
       end
 
     (rate / 100)

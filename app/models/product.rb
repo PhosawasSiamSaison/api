@@ -177,7 +177,7 @@ class Product < ApplicationRecord
         60
       when 7, 10, 12, 13
         90
-      else # 再約定した場合など
+      else # ในกรณีที่มีการต่อสัญญา ฯลฯ
         30
       end
 

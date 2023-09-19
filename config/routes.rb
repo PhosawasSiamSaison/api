@@ -468,6 +468,15 @@ Rails.application.routes.draw do
           get :download_calculate_payment_and_installment
         end
       end
+
+      resources :transaction_fee_history, only: [] do
+        collection do
+          get :transaction_fees
+          get :transaction_fee_histories
+          post :create_transaction_fee_history
+          delete :delete_transaction_fee_history
+        end
+      end
     end
 
     namespace :dealer do

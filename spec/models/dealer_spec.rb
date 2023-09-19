@@ -360,4 +360,358 @@ RSpec.describe Dealer, type: :model do
       end
     end
   end
+
+  describe '#latest_for_normal_rate' do
+    describe 'no history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      it 'get latest_for_normal_rate correctly' do
+        latest_for_normal_rate = dealer.latest_for_normal_rate
+        expect(latest_for_normal_rate).to eq(dealer.for_normal_rate)
+      end
+    end
+
+    describe 'with history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      describe 'active history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "active"
+          )
+          transaction.save(validate: false)
+        end
+
+        it 'get latest_for_normal_rate from latest history correctly' do
+          latest_for_normal_rate = dealer.latest_for_normal_rate
+          expect(latest_for_normal_rate).to eq(30)
+        end
+      end
+
+      describe 'input_ymd history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 3,
+            for_government_rate: 2,
+            for_sub_dealer_rate: 2,
+            for_individual_rate: 2,
+            status: "active"
+          )
+          transaction.save(validate: false)
+
+          delete_transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190201",
+            for_normal_rate: 20,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "retired",
+          )
+    
+          delete_transaction.save(validate: false)
+        end
+
+        it 'get latest_for_normal_rate from latest history correctly' do
+          latest_for_normal_rate = dealer.latest_for_normal_rate("20190214")
+          expect(latest_for_normal_rate).to eq(20)
+        end
+
+        it 'should not get latest_for_normal_rate from latest history scheduled' do
+          FactoryBot.create(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190301",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+          )
+
+          latest_for_normal_rate = dealer.latest_for_normal_rate("20190301")
+          pp latest_for_normal_rate.to_s
+          expect(latest_for_normal_rate).to eq(3)
+        end
+      end
+    end
+  end
+
+  describe '#latest_for_government_rate' do
+    describe 'no history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      it 'get latest_for_government_rate correctly' do
+        latest_for_government_rate = dealer.latest_for_government_rate
+        expect(latest_for_government_rate).to eq(dealer.for_government_rate)
+      end
+    end
+
+    describe 'with history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      describe 'active history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "active"
+          )
+          transaction.save(validate: false)
+        end
+
+        it 'get latest_for_government_rate from latest history correctly' do
+          latest_for_government_rate = dealer.latest_for_government_rate
+          expect(latest_for_government_rate).to eq(20)
+        end
+      end
+
+      describe 'input_ymd history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 3,
+            for_government_rate: 2,
+            for_sub_dealer_rate: 2,
+            for_individual_rate: 2,
+            status: "active"
+          )
+          transaction.save(validate: false)
+
+          delete_transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190201",
+            for_normal_rate: 20,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "retired",
+          )
+    
+          delete_transaction.save(validate: false)
+        end
+
+        it 'get latest_for_government_rate from latest history correctly' do
+          latest_for_government_rate = dealer.latest_for_government_rate("20190214")
+          expect(latest_for_government_rate).to eq(20)
+        end
+
+        it 'should not get latest_for_government_rate from latest history scheduled' do
+          FactoryBot.create(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190301",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+          )
+
+          latest_for_government_rate = dealer.latest_for_government_rate("20190301")
+          expect(latest_for_government_rate).to eq(2)
+        end
+      end
+    end
+  end
+
+  describe '#latest_for_sub_dealer_rate' do
+    describe 'no history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      it 'get latest_for_sub_dealer_rate correctly' do
+        latest_for_sub_dealer_rate = dealer.latest_for_sub_dealer_rate
+        expect(latest_for_sub_dealer_rate).to eq(dealer.for_sub_dealer_rate)
+      end
+    end
+
+    describe 'with history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      describe 'active history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "active"
+          )
+          transaction.save(validate: false)
+        end
+
+        it 'get latest_for_sub_dealer_rate from latest history correctly' do
+          latest_for_sub_dealer_rate = dealer.latest_for_sub_dealer_rate
+          expect(latest_for_sub_dealer_rate).to eq(20)
+        end
+      end
+
+      describe 'input_ymd history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 3,
+            for_government_rate: 2,
+            for_sub_dealer_rate: 2,
+            for_individual_rate: 2,
+            status: "active"
+          )
+          transaction.save(validate: false)
+
+          delete_transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190201",
+            for_normal_rate: 20,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "retired",
+          )
+    
+          delete_transaction.save(validate: false)
+        end
+
+        it 'get latest_for_sub_dealer_rate from latest history correctly' do
+          latest_for_sub_dealer_rate = dealer.latest_for_sub_dealer_rate("20190214")
+          expect(latest_for_sub_dealer_rate).to eq(20)
+        end
+
+        it 'should not get latest_for_sub_dealer_rate from latest history scheduled' do
+          FactoryBot.create(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190301",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+          )
+
+          latest_for_sub_dealer_rate = dealer.latest_for_sub_dealer_rate("20190301")
+          expect(latest_for_sub_dealer_rate).to eq(2)
+        end
+      end
+    end
+  end
+
+  describe '#latest_for_individual_rate' do
+    describe 'no history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      it 'get latest_for_individual_rate correctly' do
+        latest_for_individual_rate = dealer.latest_for_individual_rate
+        expect(latest_for_individual_rate).to eq(dealer.for_individual_rate)
+      end
+    end
+
+    describe 'with history' do
+      let(:dealer) { FactoryBot.create(:dealer) }
+      describe 'active history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "active"
+          )
+          transaction.save(validate: false)
+        end
+
+        it 'get latest_for_individual_rate from latest history correctly' do
+          latest_for_individual_rate = dealer.latest_for_individual_rate
+          expect(latest_for_individual_rate).to eq(20)
+        end
+      end
+
+      describe 'input_ymd history' do
+        before do
+          FactoryBot.create(:system_setting)
+          FactoryBot.create(:business_day, business_ymd: '20190215')
+          transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190215",
+            for_normal_rate: 3,
+            for_government_rate: 2,
+            for_sub_dealer_rate: 2,
+            for_individual_rate: 2,
+            status: "active"
+          )
+          transaction.save(validate: false)
+
+          delete_transaction = FactoryBot.build(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190201",
+            for_normal_rate: 20,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+            status: "retired",
+          )
+    
+          delete_transaction.save(validate: false)
+        end
+
+        it 'get latest_for_individual_rate from latest history correctly' do
+          latest_for_individual_rate = dealer.latest_for_individual_rate("20190214")
+          expect(latest_for_individual_rate).to eq(20)
+        end
+
+        it 'should not get latest_for_individual_rate from latest history scheduled' do
+          FactoryBot.create(:transaction_fee_history,
+            dealer: dealer,
+            apply_ymd: "20190301",
+            for_normal_rate: 30,
+            for_government_rate: 20,
+            for_sub_dealer_rate: 20,
+            for_individual_rate: 20,
+          )
+
+          latest_for_individual_rate = dealer.latest_for_individual_rate("20190301")
+          expect(latest_for_individual_rate).to eq(2)
+        end
+      end
+    end
+  end
+
+  describe '#create_transaction_fee_history' do
+    let(:dealer) { FactoryBot.create(:dealer) }
+    before do
+      FactoryBot.create(:system_setting)
+      FactoryBot.create(:business_day, business_ymd: '20190215')
+    end
+
+    it 'should create transaction_fee_history correctly' do
+      dealer.create_transaction_fee_history
+      transaction_fee_history = TransactionFeeHistory.active_transaction.find_by(dealer_id: dealer.id)
+      expect(transaction_fee_history).to be_present
+      expect(transaction_fee_history.apply_ymd).to eq('20190215')
+      expect(transaction_fee_history.for_normal_rate).to eq(dealer.for_normal_rate)
+      expect(transaction_fee_history.for_government_rate).to eq(dealer.for_government_rate)
+      expect(transaction_fee_history.for_sub_dealer_rate).to eq(dealer.for_sub_dealer_rate)
+      expect(transaction_fee_history.for_individual_rate).to eq(dealer.for_individual_rate)
+      expect(transaction_fee_history.reason).to eq('new transaction')
+      expect(transaction_fee_history.status).to eq('active')
+    end
+  end
 end
