@@ -61,7 +61,7 @@ class Contractor::EvidenceOfPaymentController < ApplicationController
   def register_payment_image(contractor)
     if params[:payment_image].present?
       parsed_image = parse_base64(params[:payment_image])
-      filename = "evidence_#{Time.zone.now}"
+      filename = "evidence_#{Time.zone.now.strftime('%Y%m%d-%H%M')}"
 
       contractor.payment_images.attach(io: parsed_image, filename: filename)
 

@@ -268,7 +268,7 @@ class Scoring
     financial_info_list = creden_api_data['financialInfo']
     raise 'no_financial_info' if !financial_info_list.instance_of?(Array) || financial_info_list.empty?
 
-    # リスト中の最新年度を採用
+    # ใช้ปีล่าสุดในรายการ
     @financial_info = financial_info_list.sort_by{ |info| info['FISCAL_YEAR'].to_i }.reverse.first
 
     # 最新年度のものが昨昨年度よりも古かったら無効

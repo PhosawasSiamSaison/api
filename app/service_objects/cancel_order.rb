@@ -53,7 +53,7 @@ class CancelOrder
         installment.remove_from_payment
       end
 
-      # RUDYのAPIを呼ぶ(画面からのみ。dealer_code必須)
+      # เรียก RUDY API (จากหน้าจอเท่านั้น ต้องใช้ Dealer_code)
       error = RudyCancelOrder.new(order).exec if !on_rudy && order.dealer.present?
 
       raise ActiveRecord::Rollback if error.present?

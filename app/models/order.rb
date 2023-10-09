@@ -496,8 +496,8 @@ class Order < ApplicationRecord
 
   # キャッシュバック金額を算出
   def calc_cashback_amount
-    # cashback_rate = 0.005
-    cashback_rate = 0.10
+    cashback_rate = 0.005
+    # cashback_rate = 0.10
 
     # input_ymdが2022-01-01以降は vat_amountを含む金額(購入金額)で計算する
     amount = input_ymd >= '20220101' ? calc_purchase_amount : purchase_amount_without_vat

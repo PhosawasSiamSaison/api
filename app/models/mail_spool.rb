@@ -96,10 +96,6 @@ class MailSpool < ApplicationRecord
           # 誤送信を防ぐ
           send_to = JvService::Application.config.try(:mask_mail_address) || ''
         end
-        pp "::: Rails.env.development? = #{Rails.env.development?}"
-        pp "::: email_address = #{contractor_user&.email}"
-        pp "::: send_to = #{send_to}"
-        pp "::: send_to.present? = #{send_to.present?}"
 
         mail_spool = create!(
           contractor: contractor || contractor_user&.contractor,

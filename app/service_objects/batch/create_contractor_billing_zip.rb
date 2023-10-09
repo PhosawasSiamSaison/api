@@ -8,7 +8,7 @@ class Batch::CreateContractorBillingZip < Batch::BatchParent
     # 締め日(15 or 月末)の判定
     if BusinessDay.closing_day?
       # 今日の締め日から1ヶ月後のDue Date
-      due_ymd = BusinessDay.one_month_after_closing_ymd
+      due_ymd = BusinessDay.next_due_ymd
 
       begin
         # Zipファイルを作成

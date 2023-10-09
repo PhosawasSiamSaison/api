@@ -404,3 +404,18 @@ ProjectManagerUser.create!(
   update_user_id: 1,
   password: "saison2019"
 )
+
+ScoringClassSetting.create!(
+  class_a_min: 29,
+  class_b_min: 19,
+  class_c_min: 12,
+  class_a_limit_amount: 100_000,
+  class_b_limit_amount: 50_000,
+  class_c_limit_amount: 50_000,
+  latest: true
+)
+
+PdpaVersion.create!(
+  version: 1,
+  file_url: "https://www.google.com/"
+)
