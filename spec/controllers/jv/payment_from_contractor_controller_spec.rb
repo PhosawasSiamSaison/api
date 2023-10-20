@@ -698,6 +698,36 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
         expect(res[:errors]).to eq [I18n.t('error_message.stale_object_error')]
       end
     end
+
+    describe 'select installment_ids for payment' do
+      before do
+        order1 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190114', purchase_amount: 50)
+        payment1 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190215', status: 'not_due_yet', total_amount: 50)
+        FactoryBot.create(:installment, order: order1, payment: payment1, due_ymd: '20190215', principal: 50)
+        order2 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190214', purchase_amount: 100)
+        order3 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190214', purchase_amount: 50)
+        payment2 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190315', status: 'not_due_yet', total_amount: 150)
+        FactoryBot.create(:installment, order: order2, payment: payment2, due_ymd: '20190315', principal: 100)
+        FactoryBot.create(:installment, order: order3, payment: payment2, due_ymd: '20190315', principal: 50)
+      end
+
+      it 'should pay selected installment correctly' do
+        params = default_params.dup
+        paid_installment1 = Installment.first
+        paid_installment3 = Installment.last
+        params[:installment_ids] = [paid_installment1.id, paid_installment3.id]
+
+        post :receive_payment, params: params
+
+        paid_installment1.reload
+        paid_installment3.reload
+        pp res
+        expect(res[:success]).to eq true
+        expect(paid_installment1.paid_up_ymd).to eq ('20190114')
+        expect(paid_installment3.paid_up_ymd).to eq ('20190114')
+        # installment.paid_up_ymd = payment_ymd
+      end
+    end
   end
 
   describe '#contractor_status' do

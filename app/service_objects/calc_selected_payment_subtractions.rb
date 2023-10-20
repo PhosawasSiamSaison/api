@@ -1,26 +1,37 @@
-class CalcPaymentSubtractions
+class CalcSelectedPaymentSubtractions
   include CalcAmountModule
 
-  def initialize(contractor, target_ymd = BusinessDay.today_ymd, is_exemption_late_charge = false, current_gain_cashback = 0)
+  def initialize(contractor, target_ymd = BusinessDay.today_ymd, is_exemption_late_charge = false, installment_ids: [])
     @contractor = contractor
     @target_ymd = target_ymd
     @is_exemption_late_charge = is_exemption_late_charge
-    @current_gain_cashback = current_gain_cashback
+    @installment_ids = installment_ids
   end
 
   def call
     contractor = @contractor
     payments = contractor.payments
+    installment_ids = @installment_ids
+    target_ymd = @target_ymd
 
     # 返却用変数
     calced_subtractions = {}
 
     # สำหรับการคำนวณเงินคืนและส่วนเกิน
     can_use_total_exceeded = contractor.exceeded_amount
-    can_use_total_cashback = contractor.cashback_amount - @current_gain_cashback
-    pp "::: contractor.cashback_amount = #{contractor.cashback_amount}"
+    can_use_total_cashback = contractor.cashback_amount
+
+    # pp "::: selected contractor.cashback_amount = #{contractor.cashback_amount}"
 
     payments.each do |payment|
+      # pp "::: installment_ids = #{installment_ids}"
+      # pp "::: payment.installments.payable_installments.appropriation_sort.where(id: installment_ids)"
+      # pp payment.installments.payable_installments.appropriation_sort.where(id: installment_ids)
+      installments = payment.installments.payable_installments.appropriation_sort.where(id: installment_ids)
+      # pp "::: payment id #{payment.id}"
+      # pp installments
+
+      next unless installments.present?
       # 支払い済みのpaymentは
       if payment.paid?
         calced_subtractions[payment.id] = {
@@ -37,15 +48,23 @@ class CalcPaymentSubtractions
 
       # ไม่รวมเงินคืนที่ได้รับจากการชำระเงินปัจจุบัน เนื่องจากไม่สามารถใช้กับการชำระเงินเดิมได้
       exclusion_cashback_amount = payment.cashback_histories.gain_total
-      pp "::: exclusion_cashback_amount = #{exclusion_cashback_amount}"
+      pp "::: selected exclusion_cashback_amount = #{exclusion_cashback_amount}"
       can_use_total_cashback = (can_use_total_cashback - exclusion_cashback_amount).round(2)
+      pp "::: can_use_total_cashback = #{can_use_total_cashback}"
 
       can_use_exceeded = 0.0
       can_use_cashback = 0.0
 
       # 残りの支払額(exceeded, cashbackの算出用)
-      remaining_balance = @is_exemption_late_charge ? payment.remaining_balance_exclude_late_charge
-                                                   : payment.remaining_balance(@target_ymd)
+      remaining_balance_exclude_late_charge = installments.inject(0) {|sum, installment|
+        sum + installment.remaining_balance_exclude_late_charge
+      }.round(2).to_f
+      remaining_balance = installments.inject(0) {|sum, installment|
+        sum + installment.remaining_balance(target_ymd)
+      }.round(2).to_f
+      remaining_balance = @is_exemption_late_charge ? remaining_balance_exclude_late_charge : remaining_balance
+
+      # pp "::: remaining_balance = #{remaining_balance}"
 
       # 使用できるexceededを算出する
       if can_use_total_exceeded > 0
@@ -55,6 +74,9 @@ class CalcPaymentSubtractions
         remaining_balance = (remaining_balance - can_use_exceeded).round(2)
       end
 
+      # pp "::: can_use_total_exceeded = #{can_use_total_exceeded}"
+      # pp "::: remaining_balance = #{remaining_balance}"
+
       # exceededがなくなったらcashbackを使用する
       if can_use_total_exceeded == 0 && can_use_total_cashback > 0
         # 使用できるcashback
@@ -62,6 +84,9 @@ class CalcPaymentSubtractions
         # 全体から減算
         can_use_total_cashback = (can_use_total_cashback - can_use_cashback).round(2)
       end
+
+      # pp "::: can_use_total_cashback = #{can_use_total_cashback}"
+      # pp "::: remaining_balance = #{remaining_balance}"
 
       calced_subtractions[payment.id] = {
         exceeded: can_use_exceeded,
@@ -72,9 +97,14 @@ class CalcPaymentSubtractions
         paid_total: (payment.paid_exceeded + payment.paid_cashback).round(2).to_f
       }
 
+      # pp "::: calced_subtractions = #{calced_subtractions}"
+
       # 除外したキャッシュバックをトータルへ戻す（次のpaymentでは使用できるようにする）
       can_use_total_cashback = (can_use_total_cashback + exclusion_cashback_amount).round(2)
     end
+
+    # pp "::: calced_subtractions"
+    # pp calced_subtractions
 
     calced_subtractions
   end

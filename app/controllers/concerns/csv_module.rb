@@ -669,10 +669,6 @@ module CsvModule
   end
 
   def send_csv(csv, file_name)
-    pp "::: bom"
-    pp bom
-    pp "::: csv"
-    pp csv
     send_data(bom + csv, type: 'text/csv', filename: file_name)
   end
 

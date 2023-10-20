@@ -553,9 +553,6 @@ class CheckCalculateController < ApplicationController
     can_use_total_exceeded = contractor.exceeded_amount
     can_use_total_cashback = contractor.cashback_amount
 
-    pp "::: can_use_total_exceeded = #{can_use_total_exceeded}"
-    pp "::: can_use_total_cashback = #{can_use_total_cashback}"
-
     payments.each do |payment|
       # 支払い済みのpaymentは
       if payment.paid?

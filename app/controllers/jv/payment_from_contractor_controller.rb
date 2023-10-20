@@ -98,6 +98,7 @@ class Jv::PaymentFromContractorController < ApplicationController
     payment_amount = params[:payment_amount].to_f
     comment        = params[:comment]
     is_exemption_late_charge = params[:no_delay_penalty].to_s == 'true' # 遅損金の免除
+    installment_ids = params[:installment_ids]
 
     contractor = Contractor.find(contractor_id)
 
@@ -107,8 +108,35 @@ class Jv::PaymentFromContractorController < ApplicationController
 
     error = nil
     ActiveRecord::Base.transaction do
-      result = AppropriatePaymentToInstallments.new(contractor, payment_ymd, payment_amount, login_user,
-        comment, is_exemption_late_charge).call
+      used_total_cashback = 0
+      used_total_exceeded = 0
+      remaining_input_amount = nil
+      receive_amount_detail_data_arr = []
+      receive_amount_history_id = nil
+      if installment_ids.present?
+        result = AppropriatePaymentToSelectedInstallments.new(contractor, payment_ymd, payment_amount, login_user,
+          comment, is_exemption_late_charge, installment_ids: installment_ids).call
+        error = result[:error]
+
+        remaining_input_amount = payment_amount > 0 ? result[:remaining_input_amount] : nil
+        receive_amount_detail_data_arr = result[:receive_amount_detail_data_arr]
+        receive_amount_history_id = result[:receive_amount_history_id]
+        # 業務エラーのチェック
+        break if error.present?
+      end
+      break if remaining_input_amount.present? && remaining_input_amount == 0
+
+      result = AppropriatePaymentToInstallments.new(
+        contractor,
+        payment_ymd,
+        payment_amount,
+        login_user,
+        comment,
+        is_exemption_late_charge,
+        remaining_input_amount: remaining_input_amount || 0,
+        receive_amount_history_id: receive_amount_history_id,
+        receive_amount_detail_data_arr: receive_amount_detail_data_arr
+      ).call
       error = result[:error]
 
       # 業務エラーのチェック
