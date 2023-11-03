@@ -110,6 +110,10 @@ class Installment < ApplicationRecord
       installment_history.payment               = prev_history.payment
     end
 
+    # pp "::: installment id that create history = #{id}"
+    # pp "::: paid_principal = #{paid_principal}"
+    # pp "::: paid_principal_was = #{paid_principal_was}"
+
     # หากมีการจัดสรรเงินต้น (หากจำนวนเงินที่จ่ายเพิ่มขึ้น)
     if paid_principal > paid_principal_was
       # อัปเดตวันถัดจากวันที่ชำระเงินเป็นวันเริ่มต้น
@@ -232,19 +236,27 @@ class Installment < ApplicationRecord
 
     # 遅損金を除いた元本と利息の、残りの支払額
     remaining_amount_without_late_charge = calc_remaining_amount_without_late_charge(target_ymd)
+    # pp "::: remaining_amount_without_late_charge = #{remaining_amount_without_late_charge}"
 
     # 遅延日数(支払いが完了していれば、完了日で算出)
     late_charge_days = calc_late_charge_days(target_ymd)
+    # pp "::: late_charge_days = #{late_charge_days}"
 
     # 遅損金
     delay_penalty_rate = order.belongs_to_project_finance? ?
       order.project.delay_penalty_rate : contractor.delay_penalty_rate
 
+    # pp "::: delay_penalty_rate = #{delay_penalty_rate}"
+
     calced_delay_penalty_rate = delay_penalty_rate / 100.0
+    # pp "::: calced_delay_penalty_rate = #{calced_delay_penalty_rate}"
     calced_amount = BigDecimal(remaining_amount_without_late_charge.to_s) * calced_delay_penalty_rate
+    # pp "::: calced_amount = #{calced_amount}"
     calced_days = BigDecimal(late_charge_days.to_s) / 365
+    # pp "::: calced_days = #{calced_days}"
 
     original_late_charge_amount = (calced_amount * calced_days).floor(2).to_f
+    # pp "::: original_late_charge_amount = #{original_late_charge_amount}"
 
 
     late_charge_amount =
@@ -262,6 +274,8 @@ class Installment < ApplicationRecord
         # ปรับเพื่อไม่ให้ต่ำกว่าจำนวนเงินที่จ่ายไป
         [calc_paid_late_charge(target_ymd), original_late_charge_amount].max
       end
+
+    # pp "::: late_charge_amount = #{late_charge_amount}"
 
     # ข้อผิดพลาดในการคำนวณจะถูกปัดเศษ
     late_charge_amount.round(2).to_f

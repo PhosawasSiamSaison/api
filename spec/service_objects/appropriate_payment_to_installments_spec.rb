@@ -2185,9 +2185,9 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
       end
     end
 
-    describe '資料パターン' do
+    describe 'Material pattern' do
       # 1Order完済、1Order一部入金/1Order is paid up, 1 order is partially paid
-      describe 'パターン１' do
+      describe 'pattern 1' do
         before do
           payment = Payment.create!(contractor: contractor, due_ymd: '20210415',
             total_amount: 3150.0, status: 'next_due')
@@ -2206,7 +2206,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             installment_number: 1, due_ymd: '20210415', principal: 1000.0, interest: 50.0)
         end
 
-        it 'データが正しく作成されること' do
+        it 'The data is created correctly' do
           AppropriatePaymentToInstallments.new(contractor, '20210415', 2500, jv_user, 'test').call
 
           expect(ReceiveAmountDetail.all.count).to eq 2
@@ -2251,7 +2251,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
       end
 
       # Exceeded Occurred, Exceeded Occurred Date列はそのExceededが発生した回の入金で消込まれたOrderの中で、消込順で最後のOrderの行に入れる
-      describe 'パターン４' do
+      describe 'pattern 4' do
         let(:dealer) { FactoryBot.create(:cpac_dealer) }
 
         before do
@@ -2275,7 +2275,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             installment_number: 1, due_ymd: '20210415', principal: 3000.0, interest: 100.0)
         end
 
-        it 'データが正しく作成されること' do
+        it 'That the data is created correctly' do
           AppropriatePaymentToInstallments.new(contractor, '20210415', 7200, jv_user, 'test').call
 
           expect(ReceiveAmountDetail.all.count).to eq 2
@@ -2294,7 +2294,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
       end
 
       # Exceededから一部入金。DealayPenalty免除
-      describe 'パターン５' do
+      describe 'pattern 5' do
         before do
           site = FactoryBot.create(:site, contractor: contractor)
 
@@ -2312,7 +2312,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           contractor.update!(pool_amount: 1000)
         end
 
-        it 'データが正しく作成されること' do
+        it 'That the data is created correctly' do
           BusinessDay.update!(business_ymd: '20210501')
 
           AppropriatePaymentToInstallments.new(
@@ -2330,8 +2330,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
       end
 
       # "Orderが無いときに入金され、Exceededに入ったときはOrder関連項目は空欄の行を追加
-      describe 'パターン６' do
-        it 'データが正しく作成されること' do
+      describe 'pattern 6' do
+        it 'That the data is created correctly' do
           BusinessDay.update!(business_ymd: '20210501')
           AppropriatePaymentToInstallments.new(contractor, '20210501', 100, jv_user, 'test').call
 
@@ -2355,7 +2355,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
       end
 
       # "回払いのOrderのInstallmentが3回分一気に消し込まれたとき
-      describe 'パターン７' do
+      describe 'pattern 7' do
         before do
           order1 = FactoryBot.create(:order, order_number: 'R1', contractor: contractor,
             dealer: dealer, product: product2, installment_count: 1, purchase_ymd: '20210412',
@@ -2378,7 +2378,7 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           contractor.update!(pool_amount: 1000)
         end
 
-        it 'データが正しく作成されること' do
+        it 'That the data is created correctly' do
           BusinessDay.update!(business_ymd: '20210715')
           AppropriatePaymentToInstallments.new(
             contractor, '20210715', 3300, jv_user, 'test', true).call
@@ -2476,7 +2476,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -2547,7 +2548,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -2618,7 +2620,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -2716,7 +2719,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
           installment3.reload
@@ -2806,7 +2810,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
           installment3.reload
@@ -2896,7 +2901,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
           installment3.reload
@@ -2996,7 +3002,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
           expect(payment.total_amount).to eq 1000.0
-          # pp payment.paid_total_amount.to_s
           expect(payment.paid_total_amount.to_s).to eq "513.06"
           expect(payment.status).to eq 'over_due'
 
@@ -3018,7 +3023,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -3073,7 +3079,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
           expect(payment.total_amount).to eq 1000.0
-          # pp payment.paid_total_amount.to_s
           expect(payment.paid_total_amount.to_s).to eq "513.06"
           expect(payment.status).to eq 'over_due'
 
@@ -3095,7 +3100,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -3150,7 +3156,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
           expect(payment.total_amount).to eq 1000.0
-          # pp payment.paid_total_amount.to_s
           expect(payment.paid_total_amount.to_s).to eq "513.06"
           expect(payment.status).to eq 'over_due'
 
@@ -3172,7 +3177,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -3254,7 +3260,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
           expect(payment.total_amount).to eq 341700.02
-          # pp payment.paid_total_amount.to_s
           expect(payment.paid_total_amount).to eq 355854.82
           expect(payment.status).to eq 'paid'
 
@@ -3276,7 +3281,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
           installment3.reload
@@ -3301,7 +3307,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           payment3 = contractor.payments.last.reload
           expect(payment3.due_ymd).to eq '20190430'
           expect(payment3.total_amount).to eq 341699.99
-          pp payment3.paid_total_amount.to_s
           expect(payment3.paid_total_amount).to eq 341699.99
           expect(payment3.status).to eq 'paid'
 
@@ -3352,7 +3357,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
           expect(payment.total_amount).to eq 341700.02
-          # pp payment.paid_total_amount.to_s
           expect(payment.paid_total_amount).to eq 355854.82
           expect(payment.status).to eq 'paid'
 
@@ -3374,7 +3378,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             jv_user,
             'hoge',
             # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           installment2.reload
 
@@ -3440,7 +3445,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             0,
             jv_user,
             'hoge',
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           contractor.reload
           order2 = Order.find_by(order_number: '2')
@@ -3472,7 +3478,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             120,
             jv_user,
             'hoge',
-            remaining_input_amount: result[:remaining_input_amount]
+            remaining_input_amount: result[:remaining_input_amount],
+            all_remaining_amount: result[:all_remaining_amount]
           ).call
           contractor.reload
           order2 = Order.find_by(order_number: '2')
@@ -3512,21 +3519,41 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             installment = order1.installments.find_by(installment_number: 1)
             result = AppropriatePaymentToSelectedInstallments.new(contractor, '20190228', 0, jv_user, 'hoge', installment_ids: [installment.id]).call
     
-            contractor.reload
+            expect(result[:all_remaining_amount]).to eq 100
             expect(result[:paid_exceeded_and_cashback_amount]).to eq 100
             expect(result[:paid_total_cashback]).to eq 100
             expect(result[:remaining_input_amount]).to eq 0
-  
-            expect(contractor.pool_amount).to eq 0.0
-    
+            expect(result[:current_gain_cashbacks]).to be_present
+            current_gain_cashback = result[:current_gain_cashbacks].find do |item|
+              item[:order_id] == order1.id
+            end
+            expect(current_gain_cashback[:cashback_amount]).to eq(order1.calc_cashback_amount)
+            expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
+            expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+            
             order1.reload
             expect(order1.paid_up_ymd).to eq '20190228'
+    
+            cashback_use_histories = contractor.cashback_histories.use
+            expect(cashback_use_histories.count).to eq 1
+    
+            # キャッシュバックが正しく使用されていること
+            expect(cashback_use_histories.last.cashback_amount).to eq 100
+            expect(cashback_use_histories.last.total).to eq 100
+            expect(cashback_use_histories.last.receive_amount_history_id).to be_present
+    
+            # not create new gain cashback because current cashback > 0
+            expect(contractor.cashback_histories.gain.count).to eq 1
 
-            gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
-            expect(gain_cashback_history1).to be_present
-            expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
+            contractor.reload
+  
+            expect(contractor.pool_amount).to eq 0.0
 
-            expect(gain_cashback_history1.total).to eq(100.46)
+            # gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
+            # expect(gain_cashback_history1).to be_present
+            # expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
+
+            # expect(gain_cashback_history1.total).to eq(100.46)
     
             AppropriatePaymentToInstallments.new(
               contractor,
@@ -3536,15 +3563,29 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               'hoge',
               remaining_input_amount: result[:remaining_input_amount],
               receive_amount_history_id: result[:receive_amount_history_id],
-              current_gain_cashback: result[:current_gain_cashback]
+              current_gain_cashbacks: result[:current_gain_cashbacks],
+              all_remaining_amount: result[:all_remaining_amount]
             ).call
             contractor.reload
             order2 = Order.find_by(order_number: '2')
             expect(result[:paid_exceeded_and_cashback_amount]).to eq 100
             expect(order2.paid_up_ymd).to eq '20190228'
+
+            expect(cashback_use_histories.count).to eq 2
+    
+            # キャッシュバックが正しく使用されていること
+            expect(cashback_use_histories.last.cashback_amount).to eq 100
+            expect(cashback_use_histories.last.total).to eq 0
+
+            gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
+            expect(gain_cashback_history1).to be_present
+            expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
+
+            expect(gain_cashback_history1.total).to eq(0.46)
+
             gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
             expect(gain_cashback_history2).to be_present
-            expect(gain_cashback_history2.cashback_amount).to eq(order1.calc_cashback_amount)
+            expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
 
             expect(gain_cashback_history2.total).to eq(0.92)
             expect(gain_cashback_history2.latest).to eq(true)
@@ -3580,30 +3621,43 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             installment = order1.installments.find_by(installment_number: 1)
             result = AppropriatePaymentToSelectedInstallments.new(contractor, '20190228', 0, jv_user, 'hoge', installment_ids: [installment.id]).call
     
-            contractor.reload
+            expect(result[:all_remaining_amount]).to eq 50
             expect(result[:paid_exceeded_and_cashback_amount]).to eq 100
             expect(result[:paid_total_cashback]).to eq 100
             expect(result[:remaining_input_amount]).to eq 0
-  
+            expect(result[:current_gain_cashbacks]).to be_present
+            current_gain_cashback = result[:current_gain_cashbacks].find do |item|
+              item[:order_id] == order1.id
+            end
+            expect(current_gain_cashback[:cashback_amount]).to eq(order1.calc_cashback_amount)
+            expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
+            expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+            
+            order1.reload
+            expect(order1.paid_up_ymd).to eq '20190228'
+    
+            cashback_use_histories = contractor.cashback_histories.use
+            expect(cashback_use_histories.count).to eq 1
+    
+            # キャッシュバックが正しく使用されていること
+            expect(cashback_use_histories.last.cashback_amount).to eq 100
+            expect(cashback_use_histories.last.total).to eq 50
+            expect(cashback_use_histories.last.receive_amount_history_id).to be_present
+    
+            # not create new gain cashback because current cashback > 0
+            expect(contractor.cashback_histories.gain.count).to eq 1
+
+            contractor.reload
             expect(contractor.pool_amount).to eq 0.0
     
             order1.reload
             expect(order1.paid_up_ymd).to eq '20190228'
 
             used_cashback_history = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 2)
-            pp "::: used_cashback_history.id = #{used_cashback_history.id}"
             expect(used_cashback_history).to be_present
             expect(used_cashback_history.cashback_amount).to eq(100.00)
 
             expect(used_cashback_history.total).to eq(50.0)
-
-            gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
-            expect(gain_cashback_history1).to be_present
-            expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
-
-            expect(gain_cashback_history1.total).to eq(50.46)
-            expect(contractor.cashback_histories.gain.count).to eq 2
-            expect(contractor.cashback_histories.use.count).to eq 1
     
             AppropriatePaymentToInstallments.new(
               contractor,
@@ -3613,30 +3667,37 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               'hoge',
               remaining_input_amount: result[:remaining_input_amount],
               receive_amount_history_id: result[:receive_amount_history_id],
-              current_gain_cashback: result[:current_gain_cashback]
+              current_gain_cashbacks: result[:current_gain_cashbacks],
+              all_remaining_amount: result[:all_remaining_amount]
             ).call
             contractor.reload
-            used_cashback_history.reload
+            # used_cashback_history.reload
             order2 = Order.find_by(order_number: '2')
-            # pp contractor.cashback_histories.to_a
-            # pp order2
             expect(order2.paid_up_ymd).to eq nil
-            # not fully paid so no gain cashback history
-            # pp contractor.cashback_histories.gain
-            # pp contractor.cashback_histories.use
+
+            expect(cashback_use_histories.count).to eq 2
+            expect(contractor.cashback_histories.gain.count).to eq 2
+    
+            # キャッシュバックが正しく使用されていること
+            expect(cashback_use_histories.last.cashback_amount).to eq 50
+            expect(cashback_use_histories.last.total).to eq 0
+
+            gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
+            expect(gain_cashback_history1).to be_present
+            expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
+
+            expect(gain_cashback_history1.cashback_amount).to eq(0.46)
+            expect(gain_cashback_history1.total).to eq(0.46)
+
             gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
             expect(gain_cashback_history2).to be_nil
             latest_cashback_history = contractor.cashback_histories.latest
-            pp latest_cashback_history
-            pp latest_cashback_history.cashback_amount.to_s
-            pp latest_cashback_history.total.to_s
 
             # the latest cashback not being use in this payment
-            expect(latest_cashback_history.point_type).to eq('use')
-            expect(latest_cashback_history.cashback_amount).to eq(50.0)
+            expect(latest_cashback_history.id).to eq(gain_cashback_history1.id)
+            expect(latest_cashback_history.point_type).to eq('gain')
+            expect(latest_cashback_history.cashback_amount).to eq(0.46)
             expect(latest_cashback_history.total).to eq(0.46)
-            expect(contractor.cashback_histories.gain.count).to eq 2
-            expect(contractor.cashback_histories.use.count).to eq 2
 
             # poolが発生していないこと
             expect(contractor.pool_amount).to eq 0
@@ -3690,36 +3751,49 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               ).call
       
               contractor.reload
+              expect(result[:all_remaining_amount]).to eq 100
               expect(result[:paid_exceeded_and_cashback_amount]).to eq 200
               expect(result[:paid_total_cashback]).to eq 200
               expect(result[:remaining_input_amount]).to eq 0
-    
+              expect(result[:current_gain_cashbacks]).to be_present
+              current_gain_cashback1 = result[:current_gain_cashbacks].find do |item|
+                item[:order_id] == order1.id
+              end
+              expect(current_gain_cashback1[:cashback_amount]).to eq(order1.calc_cashback_amount)
+              expect(current_gain_cashback1[:payment_ymd]).to eq('20190228')
+              expect(current_gain_cashback1[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+
+              current_gain_cashback2 = result[:current_gain_cashbacks].find do |item|
+                item[:order_id] == order2.id
+              end
+              expect(current_gain_cashback2[:cashback_amount]).to eq(order2.calc_cashback_amount)
+              expect(current_gain_cashback2[:payment_ymd]).to eq('20190228')
+              expect(current_gain_cashback2[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+              
+              order1.reload
+              expect(order1.paid_up_ymd).to eq '20190228'
+      
+              cashback_use_histories = contractor.cashback_histories.use
+              expect(cashback_use_histories.count).to eq 1
+      
+              # キャッシュバックが正しく使用されていること
+              expect(cashback_use_histories.last.cashback_amount).to eq 200
+              expect(cashback_use_histories.last.total).to eq 100
+              expect(cashback_use_histories.last.receive_amount_history_id).to be_present
+      
+              # not create new gain cashback because current cashback > 0
               expect(contractor.pool_amount).to eq 0.0
-              expect(contractor.cashback_histories.gain.count).to eq 3
+              expect(contractor.cashback_histories.gain.count).to eq 1
               expect(contractor.cashback_histories.use.count).to eq 1
       
               order1.reload
               expect(order1.paid_up_ymd).to eq '20190228'
   
               used_cashback_history = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 2)
-              pp "::: used_cashback_history.id = #{used_cashback_history.id}"
               expect(used_cashback_history).to be_present
               expect(used_cashback_history.cashback_amount).to eq(200.00)
   
-              expect(used_cashback_history.total).to eq(100.0)
-  
-              gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
-              expect(gain_cashback_history1).to be_present
-              expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
-  
-              expect(gain_cashback_history1.total).to eq(100.46)
-  
-              gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
-              expect(gain_cashback_history2).to be_present
-              expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
-  
-              expect(gain_cashback_history2.total).to eq(100.92)
-      
+              expect(used_cashback_history.total).to eq(100.0)    
               AppropriatePaymentToInstallments.new(
                 contractor,
                 '20190228',
@@ -3728,7 +3802,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
                 'hoge',
                 remaining_input_amount: result[:remaining_input_amount],
                 receive_amount_history_id: result[:receive_amount_history_id],
-                current_gain_cashback: result[:current_gain_cashback]
+                current_gain_cashbacks: result[:current_gain_cashbacks],
+                all_remaining_amount: result[:all_remaining_amount]
               ).call
               contractor.reload
               order3 = Order.find_by(order_number: '3')
@@ -3743,19 +3818,19 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               used_cashback_history2 = contractor.cashback_histories.use.last
               expect(used_cashback_history2.cashback_amount).to eq(100.0)
   
-              expect(used_cashback_history2.total).to eq(0.92)
+              expect(used_cashback_history2.total).to eq(0.0)
   
-              gain_cashback_history1.reload
+              gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
               expect(gain_cashback_history1).to be_present
               expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
   
-              expect(gain_cashback_history1.total).to eq(100.46)
+              expect(gain_cashback_history1.total).to eq(0.46)
   
-              gain_cashback_history2.reload
+              gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
               expect(gain_cashback_history2).to be_present
               expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
   
-              expect(gain_cashback_history2.total).to eq(100.92)
+              expect(gain_cashback_history2.total).to eq(0.92)
 
               gain_cashback_history3 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order3.id)
               expect(gain_cashback_history3).to be_present
@@ -3786,36 +3861,49 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               ).call
       
               contractor.reload
+
+              expect(result[:all_remaining_amount]).to eq 50
               expect(result[:paid_exceeded_and_cashback_amount]).to eq 200
               expect(result[:paid_total_cashback]).to eq 200
               expect(result[:remaining_input_amount]).to eq 0
-    
-              expect(contractor.pool_amount).to eq 0.0
-              expect(contractor.cashback_histories.gain.count).to eq 3
-              expect(contractor.cashback_histories.use.count).to eq 1
+              expect(result[:current_gain_cashbacks]).to be_present
+              current_gain_cashback1 = result[:current_gain_cashbacks].find do |item|
+                item[:order_id] == order1.id
+              end
+              expect(current_gain_cashback1[:cashback_amount]).to eq(order1.calc_cashback_amount)
+              expect(current_gain_cashback1[:payment_ymd]).to eq('20190228')
+              expect(current_gain_cashback1[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+
+              current_gain_cashback2 = result[:current_gain_cashbacks].find do |item|
+                item[:order_id] == order2.id
+              end
+              expect(current_gain_cashback2[:cashback_amount]).to eq(order2.calc_cashback_amount)
+              expect(current_gain_cashback2[:payment_ymd]).to eq('20190228')
+              expect(current_gain_cashback2[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+              
+              order1.reload
+              expect(order1.paid_up_ymd).to eq '20190228'
       
+              cashback_use_histories = contractor.cashback_histories.use
+              expect(cashback_use_histories.count).to eq 1
+      
+              # キャッシュバックが正しく使用されていること
+              expect(cashback_use_histories.last.cashback_amount).to eq 200
+              expect(cashback_use_histories.last.total).to eq 50
+              expect(cashback_use_histories.last.receive_amount_history_id).to be_present
+      
+              # not create new gain cashback because current cashback > 0
+              expect(contractor.pool_amount).to eq 0.0
+              expect(contractor.cashback_histories.gain.count).to eq 1
+    
               order1.reload
               expect(order1.paid_up_ymd).to eq '20190228'
   
               used_cashback_history = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 2)
-              pp "::: used_cashback_history.id = #{used_cashback_history.id}"
               expect(used_cashback_history).to be_present
               expect(used_cashback_history.cashback_amount).to eq(200.00)
   
-              expect(used_cashback_history.total).to eq(50.0)
-  
-              gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
-              expect(gain_cashback_history1).to be_present
-              expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
-  
-              expect(gain_cashback_history1.total).to eq(50.46)
-  
-              gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
-              expect(gain_cashback_history2).to be_present
-              expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
-  
-              expect(gain_cashback_history2.total).to eq(50.92)
-      
+              expect(used_cashback_history.total).to eq(50.0)    
               AppropriatePaymentToInstallments.new(
                 contractor,
                 '20190228',
@@ -3824,22 +3912,30 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
                 'hoge',
                 remaining_input_amount: result[:remaining_input_amount],
                 receive_amount_history_id: result[:receive_amount_history_id],
-                current_gain_cashback: result[:current_gain_cashback]
+                current_gain_cashbacks: result[:current_gain_cashbacks],
+                all_remaining_amount: result[:all_remaining_amount]
               ).call
               contractor.reload
               order3 = Order.find_by(order_number: '3')
               expect(contractor.cashback_histories.gain.count).to eq 3
               expect(contractor.cashback_histories.use.count).to eq 2
   
-              # used_cashback_history.reload
-              # expect(used_cashback_history).to be_present
-              # expect(used_cashback_history.cashback_amount).to eq(250.0)
-  
-              # expect(used_cashback_history.total).to eq(0.0)
               used_cashback_history2 = contractor.cashback_histories.use.last
               expect(used_cashback_history2.cashback_amount).to eq(50.0)
   
-              expect(used_cashback_history2.total).to eq(0.92)
+              expect(used_cashback_history2.total).to eq(0.0)
+
+              gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
+              expect(gain_cashback_history1).to be_present
+              expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
+  
+              expect(gain_cashback_history1.total).to eq(0.46)
+  
+              gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
+              expect(gain_cashback_history2).to be_present
+              expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
+  
+              expect(gain_cashback_history2.total).to eq(0.92)
             end
           end
         end
@@ -3891,41 +3987,52 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               installment_ids: [installment.id, installment2.id]
             ).call
 
-            # pp "::: called_result = #{result}"
-    
             contractor.reload
-            expect(contractor.cashback_amount).to eq(50.92)
+
+            expect(contractor.cashback_amount).to eq(50.0)
+            expect(result[:all_remaining_amount]).to eq 50
             expect(result[:paid_exceeded_and_cashback_amount]).to eq 200
             expect(result[:paid_total_cashback]).to eq 200
             expect(result[:remaining_input_amount]).to eq 0
-            expect(result[:current_gain_cashback]).to eq 0.92
-  
+            expect(result[:current_gain_cashbacks]).to be_present
+            current_gain_cashback1 = result[:current_gain_cashbacks].find do |item|
+              item[:order_id] == order1.id
+            end
+            expect(current_gain_cashback1[:cashback_amount]).to eq(order1.calc_cashback_amount)
+            expect(current_gain_cashback1[:payment_ymd]).to eq('20190228')
+            expect(current_gain_cashback1[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+
+            current_gain_cashback2 = result[:current_gain_cashbacks].find do |item|
+              item[:order_id] == order2.id
+            end
+            expect(current_gain_cashback2[:cashback_amount]).to eq(order2.calc_cashback_amount)
+            expect(current_gain_cashback2[:payment_ymd]).to eq('20190228')
+            expect(current_gain_cashback2[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
+            
+            order1.reload
+            expect(order1.paid_up_ymd).to eq '20190228'
+    
+            cashback_use_histories = contractor.cashback_histories.use
+            expect(cashback_use_histories.count).to eq 1
+    
+            # キャッシュバックが正しく使用されていること
+            expect(cashback_use_histories.last.cashback_amount).to eq 200
+            expect(cashback_use_histories.last.total).to eq 50
+            expect(cashback_use_histories.last.receive_amount_history_id).to be_present
+    
+            # not create new gain cashback because current cashback > 0
             expect(contractor.pool_amount).to eq 0.0
-            expect(contractor.cashback_histories.gain.count).to eq 3
+            expect(contractor.cashback_histories.gain.count).to eq 1
             expect(contractor.cashback_histories.use.count).to eq 1
     
             order1.reload
             expect(order1.paid_up_ymd).to eq '20190228'
 
             used_cashback_history = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 2)
-            pp "::: used_cashback_history.id = #{used_cashback_history.id}"
             expect(used_cashback_history).to be_present
             expect(used_cashback_history.cashback_amount).to eq(200.00)
 
             expect(used_cashback_history.total).to eq(50.0)
-
-            gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
-            expect(gain_cashback_history1).to be_present
-            expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
-
-            expect(gain_cashback_history1.total).to eq(50.46)
-
-            gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
-            expect(gain_cashback_history2).to be_present
-            expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
-
-            expect(gain_cashback_history2.total).to eq(50.92)
-    
             AppropriatePaymentToInstallments.new(
               contractor,
               '20190228',
@@ -3934,7 +4041,8 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               'hoge',
               remaining_input_amount: result[:remaining_input_amount],
               receive_amount_history_id: result[:receive_amount_history_id],
-              current_gain_cashback: result[:current_gain_cashback]
+              current_gain_cashbacks: result[:current_gain_cashbacks],
+              all_remaining_amount: result[:all_remaining_amount]
             ).call
             contractor.reload
             order3 = Order.find_by(order_number: '3')
@@ -3944,290 +4052,23 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             used_cashback_history2 = contractor.cashback_histories.use.last
             expect(used_cashback_history2.cashback_amount).to eq(50.0)
 
-            expect(used_cashback_history2.total).to eq(0.92)
-            # used_cashback_history.reload
-            # expect(used_cashback_history).to be_present
-            # expect(used_cashback_history.cashback_amount).to eq(250.92)
+            expect(used_cashback_history2.total).to eq(0.0)
 
-            # expect(used_cashback_history.total).to eq(0.0)
+            gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
+            expect(gain_cashback_history1).to be_present
+            expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
 
-            # gain_cashback_history1.reload
-            # expect(gain_cashback_history1).to be_present
-            # expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
+            expect(gain_cashback_history1.total).to eq(0.46)
 
-            # expect(gain_cashback_history1.total).to eq(0.46)
+            gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
+            expect(gain_cashback_history2).to be_present
+            expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
 
-            # gain_cashback_history2.reload
-            # expect(gain_cashback_history2).to be_present
-            # expect(gain_cashback_history2.cashback_amount).to eq(order2.calc_cashback_amount)
-
-            # expect(gain_cashback_history2.total).to eq(0.92)
-            # order2 = Order.find_by(order_number: '2')
-            # # pp contractor.cashback_histories.to_a
-            # # pp order2
-            # expect(order2.paid_up_ymd).to eq nil
-            # # not fully paid so no gain cashback history
-            # # pp contractor.cashback_histories.gain
-            # # pp contractor.cashback_histories.use
-            # gain_cashback_history2 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order2.id)
-            # expect(gain_cashback_history2).to be_nil
-            # latest_cashback_history = contractor.cashback_histories.latest
-            # pp latest_cashback_history
-            # pp latest_cashback_history.cashback_amount.to_s
-            # pp latest_cashback_history.total.to_s
-            # expect(used_cashback_history.cashback_amount).to eq(150.00)
-            # expect(used_cashback_history.total).to eq(0.0)
-
-            # # the latest cashback not being use in this payment
-            # expect(latest_cashback_history.point_type).to eq('gain')
-            # expect(latest_cashback_history.cashback_amount).to eq(0.46)
-            # expect(latest_cashback_history.total).to eq(0.46)
-            # expect(contractor.cashback_histories.gain.count).to eq 2
-            # expect(contractor.cashback_histories.use.count).to eq 1
-
-            # # poolが発生していないこと
-            # expect(contractor.pool_amount).to eq 0
+            expect(gain_cashback_history2.total).to eq(0.92)
+            expect(gain_cashback_history2.latest).to eq(true)
           end
         end
       end
-
-      # describe 'cashback history' do
-      # end
-
-      # describe 'exemption' do
-      #   before do
-      #     BusinessDay.update!(business_ymd: '20190316')
-    
-      #     order1 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190115',
-      #       purchase_amount: 1000.0)
-      #     order2 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190115',
-      #       purchase_amount: 3000.0)
-    
-      #     payment1 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190215',
-      #       status: 'over_due', total_amount: 2025.1)
-      #     payment2 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190315',
-      #       status: 'over_due', total_amount: 1025.1)
-      #     payment3 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190415',
-      #       status: 'next_due', total_amount: 1025.1)
-    
-      #     FactoryBot.create(:installment, order: order1, payment: payment1, due_ymd: '20190215',
-      #       principal: 1000.0, interest: 0)
-    
-      #     FactoryBot.create(:installment, order: order2, payment: payment1, due_ymd: '20190215',
-      #       principal: 1000.0, interest: 25.1)
-      #     FactoryBot.create(:installment, order: order2, payment: payment2, due_ymd: '20190315',
-      #       principal: 1000.0, interest: 25.1)
-      #     FactoryBot.create(:installment, order: order2, payment: payment3, due_ymd: '20190415',
-      #       principal: 1000.0, interest: 25.1)
-      #   end
-    
-      #   it 'No exemption' do
-      #     payment_total = contractor.orders.sum{|order| order.calc_total_amount('20190316')}
-      #     payment_total_without_late_charge =
-      #                     contractor.orders.sum{|order| order.calc_total_amount('20190215')}
-      #     late_charge   = contractor.orders.sum{|order| order.calc_remaining_late_charge('20190316')}
-    
-      #     # 遅損金の確認
-      #     expect(payment_total - late_charge).to eq payment_total_without_late_charge
-      #     expect(contractor.calc_over_due_amount).to_not eq 0
-    
-      #     order1 = Order.find_by(purchase_amount: 1000.0)
-      #     order2 = Order.find_by(purchase_amount: 3000.0)
-      #     installment1 = order1.installments.find_by(due_ymd: '20190215')
-      #     installment2 = order2.installments.find_by(due_ymd: '20190215')
-      #     installment3 = order2.installments.find_by(due_ymd: '20190315')
-      #     installment4 = order2.installments.find_by(due_ymd: '20190415')
-    
-      #     is_exemption_late_charge = false
-      #     result = AppropriatePaymentToSelectedInstallments.new(
-      #       contractor,
-      #       '20190316',
-      #       payment_total,
-      #       jv_user,
-      #       'test',
-      #       is_exemption_late_charge,
-      #       installment_ids: [installment1.id, installment2.id, installment3.id, installment4.id]
-      #     ).call
-      #     contractor.reload
-    
-      #     expect(contractor.payments.all?(&:paid?)).to eq true
-      #     expect(contractor.calc_over_due_amount).to eq 0
-      #     # Exemption late charges
-      #     expect(Installment.all.all?{|ins| ins.exemption_late_charges.count == 0}).to eq true
-    
-      #     expect(result[:total_exemption_late_charge]).to eq 0
-      #   end
-    
-      #   it 'Waive and write off late loss charges' do
-      #     order1 = Order.find_by(purchase_amount: 1000.0)
-      #     order2 = Order.find_by(purchase_amount: 3000.0)
-      #     installment1 = order1.installments.find_by(due_ymd: '20190215')
-      #     installment2 = order2.installments.find_by(due_ymd: '20190215')
-      #     installment3 = order2.installments.find_by(due_ymd: '20190315')
-      #     installment4 = order2.installments.find_by(due_ymd: '20190415')
-    
-      #     payment_total = contractor.orders.sum{|order| order.calc_total_amount('20190316')}
-      #     payment_total_without_late_charge =
-      #                     contractor.orders.sum{|order| order.calc_total_amount('20190215')}
-      #     late_charge   = contractor.orders.sum{|order| order.calc_remaining_late_charge('20190316')}
-    
-      #     # 遅損金の確認
-      #     expect(payment_total - late_charge).to eq payment_total_without_late_charge
-      #     expect(contractor.calc_over_due_amount).to_not eq 0
-    
-      #     is_exemption_late_charge = true
-      #     result = AppropriatePaymentToSelectedInstallments.new(
-      #       contractor,
-      #       '20190316',
-      #       payment_total_without_late_charge,
-      #       jv_user,
-      #       'test',
-      #       is_exemption_late_charge,
-      #       installment_ids: [installment1.id, installment2.id, installment3.id, installment4.id]
-      #     ).call
-      #     contractor.reload
-    
-      #     expect(contractor.payments.all?(&:paid?)).to eq true
-      #     expect(contractor.calc_over_due_amount).to eq 0
-      #     expect(Installment.find_by(interest: 0).exemption_late_charges.first.amount).to be > 0
-      #     expect(Installment.find_by(interest: 25.1, due_ymd: '20190215').exemption_late_charges.first.amount).to be > 0
-      #     expect(Installment.find_by(interest: 25.1, due_ymd: '20190315').exemption_late_charges.first.amount).to be > 0
-    
-      #     expect(result[:remaining_input_amount]).to eq 0.0
-      #     expect(result[:total_exemption_late_charge]).to eq late_charge
-      #     expect(contractor.exemption_late_charge_count).to eq 1
-    
-    
-      #     expect(ReceiveAmountHistory.all.last.exemption_late_charge).to be > 0
-      #   end
-    
-      #   it 'Waive and write off late loss charges (exceeded exemption_late_charge)' do
-      #     order1 = Order.find_by(purchase_amount: 1000.0)
-      #     order2 = Order.find_by(purchase_amount: 3000.0)
-      #     installment1 = order1.installments.find_by(due_ymd: '20190215')
-      #     installment2 = order2.installments.find_by(due_ymd: '20190215')
-      #     installment3 = order2.installments.find_by(due_ymd: '20190315')
-      #     installment4 = order2.installments.find_by(due_ymd: '20190415')
-    
-      #     payment_total = contractor.orders.sum{|order| order.calc_total_amount('20190316')}
-      #     payment_total_without_late_charge =
-      #                     contractor.orders.sum{|order| order.calc_total_amount('20190215')}
-      #     late_charge   = contractor.orders.sum{|order| order.calc_remaining_late_charge('20190316')}
-    
-      #     # 遅損金の確認
-      #     expect(payment_total - late_charge).to eq payment_total_without_late_charge
-      #     expect(contractor.calc_over_due_amount).to_not eq 0
-    
-      #     is_exemption_late_charge = true
-      #     result = AppropriatePaymentToSelectedInstallments.new(
-      #       contractor,
-      #       '20190316',
-      #       payment_total,
-      #       jv_user,
-      #       'test',
-      #       is_exemption_late_charge,
-      #       installment_ids: [installment1.id, installment2.id, installment3.id, installment4.id]
-      #     ).call
-      #     contractor.reload
-    
-      #     expect(contractor.payments.all?(&:paid?)).to eq true
-      #     expect(contractor.calc_over_due_amount).to eq 0
-      #     expect(Installment.find_by(interest: 0).exemption_late_charges.first.amount).to be > 0
-      #     expect(Installment.find_by(interest: 25.1, due_ymd: '20190215').exemption_late_charges.first.amount).to be > 0
-      #     expect(Installment.find_by(interest: 25.1, due_ymd: '20190315').exemption_late_charges.first.amount).to be > 0
-    
-      #     expect(result[:remaining_input_amount]).to eq late_charge
-      #     expect(result[:total_exemption_late_charge]).to eq late_charge
-    
-      #     # ReceiveAmountHistory not create because remaining_amount > 0
-      #     expect(ReceiveAmountHistory.all.last).to be_nil
-      #     # exemption_late_charge_count not count if ReceiveAmountHistory not create
-      #     expect(contractor.exemption_late_charge_count).to eq 0
-      #   end
-    
-      #   context 'Cashback available' do
-      #     it 'Repay with perfect cashback' do
-      #       FactoryBot.create(:cashback_history, :gain, :latest, contractor: contractor, cashback_amount: 3050.2)
-      #       order1 = Order.find_by(purchase_amount: 1000.0)
-      #       order2 = Order.find_by(purchase_amount: 3000.0)
-      #       installment1 = order1.installments.find_by(due_ymd: '20190215')
-      #       installment2 = order2.installments.find_by(due_ymd: '20190215')
-      #       installment3 = order2.installments.find_by(due_ymd: '20190315')
-      #       installment4 = order2.installments.find_by(due_ymd: '20190415')
-      #       late_charge   = contractor.orders.sum{|order| order.calc_remaining_late_charge('20190316')}
-    
-      #       # 2つの遅延Paymentをキャッシュバックのみで返済
-      #       is_exemption_late_charge = true
-      #       result = AppropriatePaymentToSelectedInstallments.new(
-      #         contractor,
-      #         '20190316',
-      #         0,
-      #         jv_user,
-      #         'test',
-      #         is_exemption_late_charge,
-      #         installment_ids: [installment1.id, installment2.id, installment3.id, installment4.id]
-      #       ).call
-      #       contractor.reload
-    
-      #       # 遅損金を含まないキャッシュバック金額のみで返済できていること
-      #       expect(Installment.find_by(due_ymd: '20190215', interest: 0).paid_up_ymd).to eq    '20190316'
-      #       expect(Installment.find_by(due_ymd: '20190215', interest: 25.1).paid_up_ymd).to eq '20190316'
-      #       expect(Installment.find_by(due_ymd: '20190315', interest: 25.1).paid_up_ymd).to eq '20190316'
-      #       expect(Installment.find_by(due_ymd: '20190415', interest: 25.1).paid_up_ymd).to eq nil
-      #       expect(Installment.find_by(due_ymd: '20190415', interest: 25.1).paid_total_amount).to eq 0
-    
-      #       # キャッシュバックが正しく使用されていること
-      #       expect(result[:total_exemption_late_charge]).to eq late_charge
-      #       expect(result[:paid_total_cashback]).to eq 3050.2
-    
-      #       # # poolが発生していないこと
-      #       expect(contractor.exemption_late_charge_count).to eq 1
-      
-      
-      #       expect(ReceiveAmountHistory.all.last.exemption_late_charge).to be > 0
-      #     end
-    
-      #     it 'Pay back with more cashback' do
-      #       FactoryBot.create(:cashback_history, :gain, :latest, contractor: contractor, cashback_amount: 5075.3)
-    
-      #       order1 = Order.find_by(purchase_amount: 1000.0)
-      #       order2 = Order.find_by(purchase_amount: 3000.0)
-      #       installment1 = order1.installments.find_by(due_ymd: '20190215')
-      #       installment2 = order2.installments.find_by(due_ymd: '20190215')
-      #       installment3 = order2.installments.find_by(due_ymd: '20190315')
-      #       installment4 = order2.installments.find_by(due_ymd: '20190415')
-      #       late_charge   = contractor.orders.sum{|order| order.calc_remaining_late_charge('20190316')}
-    
-      #       # 2つの遅延Paymentをキャッシュバックのみで返済
-      #       is_exemption_late_charge = true
-      #       result = AppropriatePaymentToSelectedInstallments.new(
-      #         contractor, '20190316',
-      #         0,
-      #         jv_user,
-      #         'test',
-      #         is_exemption_late_charge,
-      #         installment_ids: [installment1.id, installment2.id, installment3.id, installment4.id]
-      #       ).call
-      #       contractor.reload
-    
-      #       # 遅損金を含まないキャッシュバック金額のみで返済できていること
-      #       expect(Installment.find_by(due_ymd: '20190215', interest: 0).paid_up_ymd).to eq    '20190316'
-      #       expect(Installment.find_by(due_ymd: '20190215', interest: 25.1).paid_up_ymd).to eq '20190316'
-      #       expect(Installment.find_by(due_ymd: '20190315', interest: 25.1).paid_up_ymd).to eq '20190316'
-      #       expect(Installment.find_by(due_ymd: '20190415', interest: 25.1).paid_up_ymd).to eq '20190316'
-    
-      #       cashback_use_histories = contractor.cashback_histories.use
-      #       expect(cashback_use_histories.count).to eq 1
-    
-      #       # キャッシュバックが正しく使用されていること
-      #       expect(cashback_use_histories.last.cashback_amount).to eq 4075.3
-      #       expect(cashback_use_histories.last.total).to eq 1000.0
-    
-      #       # poolが発生していないこと
-      #       expect(contractor.pool_amount).to eq 0
-      #     end
-      #   end
-      # end
     end
   end
 end

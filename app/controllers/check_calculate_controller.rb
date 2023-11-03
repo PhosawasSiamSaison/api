@@ -570,9 +570,7 @@ class CheckCalculateController < ApplicationController
 
       # 支払い中のpaymentで獲得したキャッシュバックは、同じpaymentでは使用できないので、除外する
       exclusion_cashback_amount = payment.cashback_histories.gain_total
-      pp "::: exclusion_cashback_amount = #{exclusion_cashback_amount}"
       can_use_total_cashback = (can_use_total_cashback - exclusion_cashback_amount).round(2)
-      pp "::: can_use_total_cashback = #{can_use_total_cashback}"
 
       can_use_exceeded = 0.0
       can_use_cashback = 0.0
@@ -580,10 +578,6 @@ class CheckCalculateController < ApplicationController
       # 残りの支払額(exceeded, cashbackの算出用)
       remaining_balance = is_exemption_late_charge ? payment.remaining_balance_exclude_late_charge
                                                    : payment.remaining_balance(target_ymd)
-      pp "::: payment.remaining_balance_exclude_late_charge = #{payment.remaining_balance_exclude_late_charge}"
-      pp "::: payment.remaining_balance(target_ymd) = #{payment.remaining_balance(target_ymd)}"
-      pp "::: remaining_balance = #{remaining_balance}"
-
       # 使用できるexceededを算出する
       if can_use_total_exceeded > 0
         can_use_exceeded = [can_use_total_exceeded, remaining_balance].min

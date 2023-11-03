@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class AppropriatePaymentToInstallments
-  def initialize(contractor, payment_ymd, payment_amount, create_user, comment, is_exemption = false, repayment_id: nil, subtraction_repayment: false, remaining_input_amount: 0, receive_amount_history_id: nil, current_gain_cashback: 0)
+  def initialize(contractor, payment_ymd, payment_amount, create_user, comment, is_exemption = false, repayment_id: nil, subtraction_repayment: false, all_remaining_amount: 0, remaining_input_amount: 0, receive_amount_history_id: nil, current_gain_cashbacks: [], no_selected_exemption: false)
     @contractor = contractor
     @payment_ymd = payment_ymd
     @payment_amount = payment_amount
     @create_user = create_user
     @comment = comment
     @is_exemption_late_charge = is_exemption
+    @is_selected_exemption = no_selected_exemption
     @repayment_id = repayment_id
     @subtraction_repayment = subtraction_repayment
 
@@ -15,8 +16,9 @@ class AppropriatePaymentToInstallments
     @receive_amount_detail_data_arr = []
     @calculate_record_arr = []
     @remaining_input_amount = remaining_input_amount
+    @all_remaining_amount = all_remaining_amount
     @receive_amount_history_id = receive_amount_history_id
-    @current_gain_cashback = current_gain_cashback
+    @current_gain_cashbacks = current_gain_cashbacks
   end
 
   def call
@@ -31,7 +33,7 @@ class AppropriatePaymentToInstallments
     raise if subtraction_repayment && payment_amount != 0
 
     ActiveRecord::Base.transaction do
-      input_amount = remaining_input_amount > 0 ? remaining_input_amount : payment_amount.to_f
+      input_amount = all_remaining_amount > 0 ? remaining_input_amount : payment_amount.to_f
 
       paid_total_exceeded = 0
       paid_total_cashback = 0
@@ -41,12 +43,8 @@ class AppropriatePaymentToInstallments
 
       # 減算額の算出
       payment_subtractions =
-        CalcPaymentSubtractions.new(contractor, payment_ymd, is_exemption_late_charge, current_gain_cashback).call
-      # pp "::: payment_subtractions"
-      # pp payment_subtractions
-
-      # pp "::: appropriate_payments id"
-      # pp contractor.payments.appropriate_payments.map {|a| a.id}
+        CalcPaymentSubtractions.new(contractor, payment_ymd, is_exemption_late_charge).call
+      
       # Payment
       contractor.payments.appropriate_payments.each do |payment|
         payment_subtraction = payment_subtractions[payment.id]
@@ -113,6 +111,8 @@ class AppropriatePaymentToInstallments
 
           # 遅損金の支払いの免除
           if payment_late_charge > 0 && is_exemption_late_charge
+            pp "::: installment.id = #{installment.id}"
+            pp "::: remaining_late_charge = #{remaining_late_charge}"
             # 免除履歴のレコードを作成
             installment.exemption_late_charges.create!(amount: remaining_late_charge)
 
@@ -120,6 +120,7 @@ class AppropriatePaymentToInstallments
             receive_amount_detail_data[:waive_late_charge] = remaining_late_charge
 
             total_exemption_late_charge += remaining_late_charge
+            pp "::: total_exemption_late_charge = #{total_exemption_late_charge}"
 
             calculate_record.exemption_late_charge = remaining_late_charge
             calculate_record.total_exemption_late_charge = total_exemption_late_charge
@@ -183,6 +184,7 @@ class AppropriatePaymentToInstallments
         # 利息と元本の充当
         installments.reload.each do |installment|
           calculate_record = find_calculate_record(installment.id)
+
           ## 利息
           # 利息の支払い残金
           remaining_interest = installment.remaining_interest
@@ -318,7 +320,6 @@ class AppropriatePaymentToInstallments
         payment.save!
 
         exclusion_cashback_amount = payment.cashback_histories.gain_total
-        # pp ":::  exclusion_cashback_amount = #{exclusion_cashback_amount}"
 
         # paymentの支払いが完了しなければ、後続のpaymentも処理をしない
         break unless payment.paid?
@@ -332,11 +333,18 @@ class AppropriatePaymentToInstallments
       end
 
       # Receive Amount History
-      # pp "::: before id = #{receive_amount_history_id}"
       receive_amount_history = ReceiveAmountHistory.find_by(id: receive_amount_history_id)
-      # pp "::: receive_amount_history.present? = #{receive_amount_history.present?}"
-      unless receive_amount_history.present?
-        # pp "call unless"
+      if receive_amount_history.present?
+        pp "::: receive_amount_history"
+        pp receive_amount_history
+        pp "::: receive_amount_history.exemption_late_charge = #{receive_amount_history.exemption_late_charge}"
+        pp "::: total_exemption_late_charge = #{total_exemption_late_charge}"
+        if is_exemption_late_charge && is_selected_exemption
+          pp "::: total = #{receive_amount_history.exemption_late_charge + total_exemption_late_charge}"
+          receive_amount_history.exemption_late_charge += total_exemption_late_charge
+          receive_amount_history.save!
+        end
+      else
         receive_amount_history = ReceiveAmountHistory.create!(contractor: contractor,
           receive_ymd: payment_ymd,
           receive_amount: payment_amount,
@@ -347,18 +355,22 @@ class AppropriatePaymentToInstallments
         )
       end
       receive_amount_history_id = receive_amount_history.id
-      # pp "::: after id = #{receive_amount_history_id}"
 
       # 使用したキャッシュバックの履歴を作成
-      pp "::: before create use cashback_amount = #{contractor.cashback_amount}"
       if paid_total_cashback > 0
         # キャッシュバック使用の履歴を作成
         contractor.create_use_cashback_history(
           paid_total_cashback, payment_ymd, receive_amount_history_id: receive_amount_history.id
         )
       end
-      pp "::: after create use cashback_amount = #{contractor.cashback_amount}"
-
+      current_gain_cashbacks.each do |current_gain_cashback|
+        contractor.create_gain_cashback_history(
+          current_gain_cashback[:cashback_amount],
+          current_gain_cashback[:payment_ymd],
+          current_gain_cashback[:order_id],
+          receive_amount_history_id: current_gain_cashback[:receive_amount_history_id]
+        )
+      end
 
       # 支払いが完了したOrderの更新
       contractor.orders.includes(:installments).payable_orders.each do |order|
@@ -379,12 +391,9 @@ class AppropriatePaymentToInstallments
           # 履歴データ
           installment = order.installments.first
           receive_amount_detail_data = find_receive_amount_detail_data(installment.id)
-          pp "::: receive_amount_detail_data_arr = #{receive_amount_detail_data_arr}"
-          pp "::: installment.id = #{installment.id}"
-          pp "::: receive_amount_detail_data = #{receive_amount_detail_data}"
           calculate_record = find_calculate_record(installment.id)
-          receive_amount_detail_data[:cashback_occurred_amount] = cashback_amount
-          calculate_record.update!(gain_cashback_amount: cashback_amount)
+          receive_amount_detail_data.present? && receive_amount_detail_data[:cashback_occurred_amount] = cashback_amount
+          calculate_record&.update!(gain_cashback_amount: cashback_amount)
         end
 
         # RUDY API を呼ぶ
@@ -398,7 +407,7 @@ class AppropriatePaymentToInstallments
       contractor.pool_amount += input_amount
 
       # 免除のチェックがあればカウントをあげる
-      contractor.exemption_late_charge_count += 1 if is_exemption_late_charge
+      contractor.exemption_late_charge_count += 1 if is_exemption_late_charge && !is_selected_exemption
 
       contractor.check_payment = false
 
@@ -426,6 +435,17 @@ class AppropriatePaymentToInstallments
           th_company_name: contractor.th_company_name,
           en_company_name: contractor.en_company_name,
         )
+        # exceeded_receive_amount = ReceiveAmountDetail.find_or_initialize_by(
+        #   receive_amount_history: receive_amount_history,
+        #   contractor: contractor,
+        #   repayment_ymd: payment_ymd,
+        #   exceeded_occurred_amount: input_amount,
+        #   exceeded_occurred_ymd: payment_ymd,
+        #   tax_id: contractor.tax_id,
+        #   th_company_name: contractor.th_company_name,
+        #   en_company_name: contractor.en_company_name,
+        # )
+        # exceeded_receive_amount.save!
       else
         last_row = receive_amount_detail_data_arr.last
 
@@ -435,6 +455,12 @@ class AppropriatePaymentToInstallments
           # 最後の消し込みのinstallmentのみに値をセットする
           exceeded_occurred_amount =
             last_row[:installment_id] == data[:installment_id] ? input_amount : 0
+
+          receive_amount_detail = ReceiveAmountDetail.find_by(
+            receive_amount_history: receive_amount_history,
+            contractor: contractor,
+            installment: installment
+          )
 
           ReceiveAmountDetail.create!(
             receive_amount_history: receive_amount_history,
@@ -494,7 +520,8 @@ class AppropriatePaymentToInstallments
   private
   attr_reader :contractor, :payment_ymd, :payment_amount, :create_user, :comment,
     :is_exemption_late_charge, :receive_amount_detail_data_arr, :repayment_id, :subtraction_repayment,
-    :calculate_record_arr, :remaining_input_amount, :receive_amount_history_id, :current_gain_cashback
+    :calculate_record_arr, :remaining_input_amount, :receive_amount_history_id, :current_gain_cashbacks, :all_remaining_amount,
+    :is_selected_exemption
 
   # 指定の金額から減算をした残りの金額を返す
   # exceeded -> cashback -> input_amount(入金額) の順で target_amount(支払額) から引いていく

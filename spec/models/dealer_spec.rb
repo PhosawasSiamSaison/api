@@ -438,7 +438,6 @@ RSpec.describe Dealer, type: :model do
           )
 
           latest_for_normal_rate = dealer.latest_for_normal_rate("20190301")
-          pp latest_for_normal_rate.to_s
           expect(latest_for_normal_rate).to eq(3)
         end
       end

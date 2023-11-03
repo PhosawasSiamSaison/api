@@ -120,6 +120,7 @@ class Product < ApplicationRecord
 
     installments = {}
 
+    # pp "::: interest_rate = #{interest_rate}"
     total_interest = interest(amount, interest_rate)
 
     number_of_installments.times.each.with_index(1) {|hoge, installment_number|

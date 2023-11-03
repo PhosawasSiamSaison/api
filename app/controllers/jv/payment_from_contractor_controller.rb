@@ -98,6 +98,7 @@ class Jv::PaymentFromContractorController < ApplicationController
     payment_amount = params[:payment_amount].to_f
     comment        = params[:comment]
     is_exemption_late_charge = params[:no_delay_penalty].to_s == 'true' # 遅損金の免除
+    is_selected_exemption_late_charge = params[:no_selected_delay_penalty].to_s == 'true' # 遅損金の免除
     installment_ids = params[:installment_ids]
 
     contractor = Contractor.find(contractor_id)
@@ -108,23 +109,37 @@ class Jv::PaymentFromContractorController < ApplicationController
 
     error = nil
     ActiveRecord::Base.transaction do
+
       used_total_cashback = 0
       used_total_exceeded = 0
       remaining_input_amount = nil
-      receive_amount_detail_data_arr = []
+      all_remaining_amount = nil
+      current_gain_cashbacks = []
       receive_amount_history_id = nil
       if installment_ids.present?
         result = AppropriatePaymentToSelectedInstallments.new(contractor, payment_ymd, payment_amount, login_user,
-          comment, is_exemption_late_charge, installment_ids: installment_ids).call
+          comment, is_selected_exemption_late_charge, installment_ids: installment_ids).call
         error = result[:error]
 
         remaining_input_amount = payment_amount > 0 ? result[:remaining_input_amount] : nil
-        receive_amount_detail_data_arr = result[:receive_amount_detail_data_arr]
+        current_gain_cashbacks = result[:current_gain_cashbacks]
         receive_amount_history_id = result[:receive_amount_history_id]
+        all_remaining_amount = result[:all_remaining_amount]
         # 業務エラーのチェック
         break if error.present?
+
+        # 排他チェック
+        # ラグを減らすために消し込み後に実行
+        # 消し込みでreceive_amount_historiesが作成されるので引数に1をプラスして比較する
+        if contractor.receive_amount_histories.count != params.fetch(:receive_amount_history_count).to_i + 1
+          raise ActiveRecord::StaleObjectError
+        end
+
+        break if contractor.payments.appropriate_payments.blank?
+
       end
-      break if remaining_input_amount.present? && remaining_input_amount == 0
+
+      break if all_remaining_amount.present? && all_remaining_amount == 0
 
       result = AppropriatePaymentToInstallments.new(
         contractor,
@@ -135,7 +150,9 @@ class Jv::PaymentFromContractorController < ApplicationController
         is_exemption_late_charge,
         remaining_input_amount: remaining_input_amount || 0,
         receive_amount_history_id: receive_amount_history_id,
-        receive_amount_detail_data_arr: receive_amount_detail_data_arr
+        current_gain_cashbacks: current_gain_cashbacks,
+        all_remaining_amount: all_remaining_amount || 0,
+        no_selected_exemption: is_selected_exemption_late_charge
       ).call
       error = result[:error]
 

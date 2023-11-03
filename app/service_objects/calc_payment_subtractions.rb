@@ -1,11 +1,10 @@
 class CalcPaymentSubtractions
   include CalcAmountModule
 
-  def initialize(contractor, target_ymd = BusinessDay.today_ymd, is_exemption_late_charge = false, current_gain_cashback = 0)
+  def initialize(contractor, target_ymd = BusinessDay.today_ymd, is_exemption_late_charge = false)
     @contractor = contractor
     @target_ymd = target_ymd
     @is_exemption_late_charge = is_exemption_late_charge
-    @current_gain_cashback = current_gain_cashback
   end
 
   def call
@@ -17,8 +16,7 @@ class CalcPaymentSubtractions
 
     # สำหรับการคำนวณเงินคืนและส่วนเกิน
     can_use_total_exceeded = contractor.exceeded_amount
-    can_use_total_cashback = contractor.cashback_amount - @current_gain_cashback
-    pp "::: contractor.cashback_amount = #{contractor.cashback_amount}"
+    can_use_total_cashback = contractor.cashback_amount
 
     payments.each do |payment|
       # 支払い済みのpaymentは
@@ -37,7 +35,6 @@ class CalcPaymentSubtractions
 
       # ไม่รวมเงินคืนที่ได้รับจากการชำระเงินปัจจุบัน เนื่องจากไม่สามารถใช้กับการชำระเงินเดิมได้
       exclusion_cashback_amount = payment.cashback_histories.gain_total
-      pp "::: exclusion_cashback_amount = #{exclusion_cashback_amount}"
       can_use_total_cashback = (can_use_total_cashback - exclusion_cashback_amount).round(2)
 
       can_use_exceeded = 0.0

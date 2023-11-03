@@ -209,8 +209,6 @@ class AppropriateProjectOrders
       # refundに残金を追加する
       project_phase_site.refund_amount += input_amount
 
-      pp "::: lasted_installment_id = #{lasted_installment_id}"
-
       calculate_record = find_calculate_record(lasted_installment_id)
       calculate_record.refund_amount = input_amount
       calculate_record.save!

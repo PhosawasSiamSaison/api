@@ -7,7 +7,6 @@ class Batch::CreateContractorBillingData < Batch::BatchParent
     if BusinessDay.closing_day?
       # # วันครบกำหนดหนึ่งเดือนนับจากวันที่ปิดวันนี้
       # one_month_after_closing_ymd = BusinessDay.one_month_after_closing_ymd
-      # pp "::: one_month_after_closing_ymd = #{one_month_after_closing_ymd}"
 
       # # บันทึกข้อมูลการเรียกเก็บเงินจากการชำระเงินเมื่อการเรียกเก็บเงินได้รับการยืนยัน
       # PaymentDefault.where(due_ymd: one_month_after_closing_ymd).each do |payment|
@@ -16,7 +15,6 @@ class Batch::CreateContractorBillingData < Batch::BatchParent
 
       # รับวันที่ปิดถัดไป (ระบุวันถัดไปเพราะวันที่ไม่ได้อัพเดท)
       next_due_ymd = BusinessDay.next_due_ymd(BusinessDay.tomorrow)
-      pp "::: next_due_ymd = #{next_due_ymd}"
 
       # หากมีการเพิ่มคำสั่งซื้อสำหรับผลิตภัณฑ์ที่ 15 ให้สร้างขึ้นใหม่
       PaymentDefault.where(due_ymd: next_due_ymd, status: %W(next_due)).each do |payment|

@@ -502,6 +502,9 @@ class Order < ApplicationRecord
     # input_ymdが2022-01-01以降は vat_amountを含む金額(購入金額)で計算する
     amount = input_ymd >= '20220101' ? calc_purchase_amount : purchase_amount_without_vat
 
+    # pp "::: cashback return amount = #{amount}"
+    # pp "::: gain = #{(BigDecimal(amount.to_s) * cashback_rate).floor(2).to_f}"
+
     # VATを除いた購入金額 * 0.005 (0.5 %) 数点第三位以下切捨て
     (BigDecimal(amount.to_s) * cashback_rate).floor(2).to_f
   end

@@ -125,7 +125,6 @@ class MailSpool < ApplicationRecord
               send_to = JvService::Application.config.try(:mask_mail_address) || ''
             end
 
-            pp "::: must use send_to = #{send_to}"
             mail_spool.send_email_addresses.create!(contractor_user: contractor_user, send_to: send_to)
           end
         end

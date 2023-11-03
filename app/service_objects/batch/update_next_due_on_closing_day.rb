@@ -14,7 +14,6 @@ class Batch::UpdateNextDueOnClosingDay < Batch::BatchParent
         # 今日の締め日から1ヶ月後までの締め日
         # (15日商品も対象にするので範囲で指定する)
         due_ymd_range = BusinessDay.today_ymd..BusinessDay.next_due_ymd(BusinessDay.tomorrow)
-        pp "::: due_ymd_range = #{due_ymd_range}"
 
         # 1ヶ月以内の約定日のPaymentのstatus(not_due_yet)を next_dueへ更新
         Payment.where(due_ymd: due_ymd_range).not_due_yet.each do |payment|
