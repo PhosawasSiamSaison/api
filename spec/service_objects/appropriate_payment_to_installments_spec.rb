@@ -2443,14 +2443,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (100.0)
   
-          # # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(100.00)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -2475,7 +2467,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             200.0,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -2515,14 +2506,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (50.0)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(100.00)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -2547,7 +2530,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             150.0,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -2587,14 +2569,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (150.0)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(100.00)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -2619,7 +2593,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             150.0,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -2685,15 +2658,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (683399.98)
   
-          # # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(333333.34)
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq(8366.68)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -2718,7 +2682,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             1025100.0,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -2776,15 +2739,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (300000)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(333333.34)
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq(8366.68)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -2809,7 +2763,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             641700.02,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -2867,15 +2820,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (683499.98)
   
-          # # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(333333.34)
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq(8366.68)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -2900,7 +2844,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             1025200.0,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -2989,15 +2932,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (513.06)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.00)
-          # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(13.06)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -3022,7 +2956,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             1026.12,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -3066,15 +2999,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (486.94)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.00)
-          # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(13.06)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -3099,7 +3023,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             1000.00,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -3143,15 +3066,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (613.06)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.00)
-          # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(13.06)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -3176,7 +3090,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             1126.12,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -3246,16 +3159,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (690308.87)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(333333.34)
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq(8366.68)
-          # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(14154.8)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -3280,7 +3183,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             1046162.89,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -3343,16 +3245,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
           installment1.reload
           expect(result[:remaining_input_amount]).to eq (15275.55)
   
-          # pay exceed so must have this to other loop
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment1.id
-          # end
-          # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq(333333.34)
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq(8366.68)
-          # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(14154.8)
-
           # Payment
           payment = contractor.payments.first.reload
           expect(payment.due_ymd).to eq '20190228'
@@ -3377,7 +3269,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
             371130.37,
             jv_user,
             'hoge',
-            # receive_amount_detail_data_arr: result[:receive_amount_detail_data_arr],
             remaining_input_amount: result[:remaining_input_amount],
             all_remaining_amount: result[:all_remaining_amount]
           ).call
@@ -3549,12 +3440,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
   
             expect(contractor.pool_amount).to eq 0.0
 
-            # gain_cashback_history1 = contractor.cashback_histories.find_by(exec_ymd: '20190228', point_type: 1, order_id: order1.id)
-            # expect(gain_cashback_history1).to be_present
-            # expect(gain_cashback_history1.cashback_amount).to eq(order1.calc_cashback_amount)
-
-            # expect(gain_cashback_history1.total).to eq(100.46)
-    
             AppropriatePaymentToInstallments.new(
               contractor,
               '20190228',
@@ -3671,7 +3556,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               all_remaining_amount: result[:all_remaining_amount]
             ).call
             contractor.reload
-            # used_cashback_history.reload
             order2 = Order.find_by(order_number: '2')
             expect(order2.paid_up_ymd).to eq nil
 
@@ -3810,11 +3694,6 @@ RSpec.describe AppropriatePaymentToInstallments, type: :model do
               expect(contractor.cashback_histories.gain.count).to eq 4
               expect(contractor.cashback_histories.use.count).to eq 2
   
-              # used_cashback_history.reload
-              # expect(used_cashback_history).to be_present
-              # expect(used_cashback_history.cashback_amount).to eq(300.0)
-  
-              # expect(used_cashback_history.total).to eq(0.0)
               used_cashback_history2 = contractor.cashback_histories.use.last
               expect(used_cashback_history2.cashback_amount).to eq(100.0)
   

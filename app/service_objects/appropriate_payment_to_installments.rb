@@ -111,8 +111,6 @@ class AppropriatePaymentToInstallments
 
           # 遅損金の支払いの免除
           if payment_late_charge > 0 && is_exemption_late_charge
-            pp "::: installment.id = #{installment.id}"
-            pp "::: remaining_late_charge = #{remaining_late_charge}"
             # 免除履歴のレコードを作成
             installment.exemption_late_charges.create!(amount: remaining_late_charge)
 
@@ -120,7 +118,6 @@ class AppropriatePaymentToInstallments
             receive_amount_detail_data[:waive_late_charge] = remaining_late_charge
 
             total_exemption_late_charge += remaining_late_charge
-            pp "::: total_exemption_late_charge = #{total_exemption_late_charge}"
 
             calculate_record.exemption_late_charge = remaining_late_charge
             calculate_record.total_exemption_late_charge = total_exemption_late_charge
@@ -335,12 +332,7 @@ class AppropriatePaymentToInstallments
       # Receive Amount History
       receive_amount_history = ReceiveAmountHistory.find_by(id: receive_amount_history_id)
       if receive_amount_history.present?
-        pp "::: receive_amount_history"
-        pp receive_amount_history
-        pp "::: receive_amount_history.exemption_late_charge = #{receive_amount_history.exemption_late_charge}"
-        pp "::: total_exemption_late_charge = #{total_exemption_late_charge}"
         if is_exemption_late_charge && is_selected_exemption
-          pp "::: total = #{receive_amount_history.exemption_late_charge + total_exemption_late_charge}"
           receive_amount_history.exemption_late_charge += total_exemption_late_charge
           receive_amount_history.save!
         end

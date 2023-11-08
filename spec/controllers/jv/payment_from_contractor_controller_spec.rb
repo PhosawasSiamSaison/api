@@ -738,7 +738,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
           expect(paid_installment1.paid_up_ymd).to eq ('20190114')
           expect(paid_installment2.paid_up_ymd).to eq (nil)
           expect(paid_installment3.paid_up_ymd).to eq ('20190114')
-          # installment.paid_up_ymd = payment_ymd
         end
       end
 
@@ -831,7 +830,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
 
             post :receive_payment, params: params
             
-            pp res
             expect(res[:success]).to eq true
             contractor.reload
             paid_installment1.reload
@@ -928,17 +926,12 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
 
             post :receive_payment, params: params
             
-            pp res
             expect(res[:success]).to eq true
             contractor.reload
             paid_installment1.reload
             paid_installment2.reload
             paid_installment3.reload
 
-            # order1 = Order.find_by(order_number: '1')
-            # expect(order1.paid_up_ymd).to eq '20190114'
-            # expect(paid_installment1.paid_principal).to eq(100)
-            
             order2 = Order.find_by(order_number: '2')
             expect(order2.paid_up_ymd).to eq '20190114'
             expect(paid_installment2.paid_principal).to eq(100)
@@ -963,11 +956,7 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
       describe 'test case' do
         before do
           order1 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190114', purchase_amount: 2000)
-          # payment1 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190215', status: 'not_due_yet', total_amount: 50)
-          # FactoryBot.create(:installment, order: order1, payment: payment1, due_ymd: '20190215', principal: 50)
           order2 = FactoryBot.create(:order, contractor: contractor, input_ymd: '20190114', purchase_amount: 2000)
-          # payment2 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190315', status: 'not_due_yet', total_amount: 150)
-          # FactoryBot.create(:installment, order: order2, payment: payment2, due_ymd: '20190315', principal: 100)
 
           payment1 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190215', status: 'next_due', total_amount: 2683.42)
           payment2 = FactoryBot.create(:payment, contractor: contractor, due_ymd: '20190315',
@@ -1006,7 +995,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
           expect(paid_installment2.paid_up_ymd).to eq (nil)
           expect(paid_last_installment.paid_up_ymd).to eq (nil)
           expect(contractor.cashback_amount)
-          # installment.paid_up_ymd = payment_ymd
 
           # second pay for case 3
           params = default_params.dup
@@ -1032,7 +1020,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
           expect(paid_last_installment.paid_up_ymd).to eq (nil)
           expect(paid_last_installment.paid_principal).to eq (483.27)
           expect(paid_last_installment.paid_interest).to eq (16.73)
-          # installment.paid_up_ymd = payment_ymd
         end
       end
 
@@ -1068,7 +1055,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
               order3 = Order.find_by(order_number: '2')
               installment3 = order3.installments.find_by(installment_number: 1)
               params = default_params.dup
-              # all_exemption_late_charge = (installment1.calc_late_charge + installment2.calc_late_charge + installment3.calc_late_charge).round(2)
               # exemption only first installment
               all_exemption_late_charge = (installment1.calc_late_charge).round(2)
 
@@ -1163,7 +1149,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
 
               post :receive_payment, params: params
 
-              pp res
               expect(res[:success]).to eq true
 
               contractor.reload
@@ -1193,7 +1178,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
 
               post :receive_payment, params: params
 
-              pp res
               expect(res[:success]).to eq true
 
               contractor.reload
@@ -1345,13 +1329,8 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
   
             post :receive_payment, params: params
 
-            # result = AppropriatePaymentToSelectedInstallments.new(contractor, '20190228', 340, jv_user, 'hoge', installment_ids: [installment1.id, installment2.id]).call
-    
             expect(res[:success]).to eq true
             contractor.reload
-            # expect(result[:paid_exceeded_and_cashback_amount]).to eq 0
-            # expect(result[:paid_total_exceeded]).to eq 0
-            # expect(result[:remaining_input_amount]).to eq 100
   
             expect(contractor.pool_amount).to eq 100
     
@@ -1430,7 +1409,6 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
             expect(order1.paid_up_ymd).to eq '20190228'
   
             receive_amount_detail1 = ReceiveAmountDetail.first
-            # receive_amount_detail2 = ReceiveAmountDetail.last
             expect(receive_amount_detail1.repayment_ymd).to eq('20190228')
             expect(receive_amount_detail1.exceeded_occurred_amount).to eq(0)
             expect(receive_amount_detail1.exceeded_occurred_ymd).to eq(nil)
@@ -1763,11 +1741,9 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
 
               receive_amount_detail1 = ReceiveAmountDetail.first
               receive_amount_detail2 = ReceiveAmountDetail.second
-              # receive_amount_detail3 = ReceiveAmountDetail.last
               expect(receive_amount_detail1.waive_late_charge).to eq(installment1_calc_late_charge)
 
               expect(receive_amount_detail2.waive_late_charge).to eq(installment2_calc_late_charge)
-              # expect(receive_amount_detail3.waive_late_charge).to eq(installment3_calc_late_charge)
             end
 
             it 'should save and update exemption_late_charge correctly when selected installment and go to fifo payment (pay 2 installment partial)' do
@@ -1846,11 +1822,9 @@ RSpec.describe Jv::PaymentFromContractorController, type: :controller do
 
               receive_amount_detail1 = ReceiveAmountDetail.first
               receive_amount_detail2 = ReceiveAmountDetail.second
-              # receive_amount_detail3 = ReceiveAmountDetail.last
               expect(receive_amount_detail1.waive_late_charge).to eq(installment1_calc_late_charge)
 
               expect(receive_amount_detail2.waive_late_charge).to eq(installment2_calc_late_charge)
-              # expect(receive_amount_detail3.waive_late_charge).to eq(installment3_calc_late_charge)
             end
           end
         end

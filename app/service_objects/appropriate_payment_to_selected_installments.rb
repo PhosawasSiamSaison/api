@@ -114,8 +114,6 @@ class AppropriatePaymentToSelectedInstallments
 
           # 遅損金の支払いの免除
           if payment_late_charge > 0 && is_exemption_late_charge
-            pp "::: selected installment.id = #{installment.id}"
-            pp "::: selected remaining_late_charge = #{remaining_late_charge}"
             # 免除履歴のレコードを作成
             installment.exemption_late_charges.create!(amount: remaining_late_charge)
 
@@ -123,7 +121,6 @@ class AppropriatePaymentToSelectedInstallments
             receive_amount_detail_data[:waive_late_charge] = remaining_late_charge
 
             total_exemption_late_charge += remaining_late_charge
-            pp "::: selected total_exemption_late_charge = #{total_exemption_late_charge}"
 
             calculate_record.exemption_late_charge = remaining_late_charge
             calculate_record.total_exemption_late_charge = total_exemption_late_charge
@@ -363,20 +360,9 @@ class AppropriatePaymentToSelectedInstallments
           # キャッシュバック金額を算出
           cashback_amount = order.calc_cashback_amount
 
-          # キャッシュバック獲得の履歴を作成
-          # contractor.create_gain_cashback_history(
-          #   cashback_amount, payment_ymd, order.id, receive_amount_history_id: receive_amount_history.id
-          # )
           current_remaining_amount = contractor.pool_amount + contractor.cashback_amount - current_gain_cashback_amount
           current_remaining_amount += input_amount if contractor.payments.appropriate_payments.present?
-          # if contractor.payments.appropriate_payments.present? && all_remaining_amount > 0
-          pp "::: contractor.pool_amount = #{contractor.pool_amount}"
-          pp "::: contractor.cashback_amount = #{contractor.cashback_amount}"
-          pp "::: current_gain_cashback_amount = #{current_gain_cashback_amount}"
-          pp "::: input_amount = #{input_amount}"
-          pp "::: current_remaining_amount = #{current_remaining_amount}"
-          pp "::: current_remaining_amount > 0 #{current_remaining_amount > 0}"
-          pp "::: correct date to fifo loop? #{contractor.payments.appropriate_payments.present? && current_remaining_amount > 0}"
+
           if contractor.payments.appropriate_payments.present? && current_remaining_amount > 0
             # correct data to create gain cashback to next loop because still have repayment amount that can pay
             current_gain_cashbacks.push({
@@ -413,9 +399,6 @@ class AppropriatePaymentToSelectedInstallments
       # 免除のチェックがあればカウントをあげる
       # contractor.exemption_late_charge_count += 1 if is_exemption_late_charge && (contractor.payments.appropriate_payments.blank? || all_remaining_amount == 0)
       contractor.exemption_late_charge_count += 1 if is_exemption_late_charge
-
-      pp "::: contractor.exemption_late_charge_count = #{ contractor.exemption_late_charge_count}"
-      pp "::: is_selected_exemption_late_charge = #{is_exemption_late_charge}"
 
       contractor.check_payment = false
 

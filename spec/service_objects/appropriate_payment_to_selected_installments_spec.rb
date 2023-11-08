@@ -84,9 +84,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
 
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
             # Order
             order = contractor.orders.first
             expect(order.paid_up_ymd).to eq '20190228'
@@ -120,7 +117,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             receive_amount_detail = ReceiveAmountDetail.find_by(installment_id: paid_installment1.id)
             expect(receive_amount_detail).to be_present
             expect(receive_amount_detail.repayment_ymd).to eq('20190228')
-            # expect(contractor.cashback_amount).to eq(2.33)
           end
 
           it 'Partial payment (450)' do
@@ -141,9 +137,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
-
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
             # Order
             order = contractor.orders.first
@@ -197,14 +190,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
-
-            # # pay exceed so must have this to other loop
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-            # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-            #   item[:installment_id] == paid_installment1.id
-            # end
-            # expect(receive_amount_detail_data1[:installment_id]).to eq(paid_installment1.id)
-            # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.0)
 
             # Payment
             payment = contractor.payments.first
@@ -273,9 +258,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
-
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
             # Order
             order = contractor.orders.first
@@ -369,9 +351,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
 
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
             # Order
             order = contractor.orders.first
             expect(order.paid_up_ymd).to eq nil
@@ -445,9 +424,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             installment1 = contractor.installments.find_by(installment_number: 1)
             result = AppropriatePaymentToSelectedInstallments.new(contractor, '20190228', 12.55, jv_user, 'hoge',installment_ids: [installment1.id]).call
 
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
             # Order
             order = contractor.orders.first
             expect(order.paid_up_ymd).to eq nil
@@ -498,9 +474,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
-
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
             # Order
             order = contractor.orders.first
@@ -583,9 +556,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
-
-            # # pay all payment_amount so should not have this
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
             # Order
             order = contractor.orders.first
@@ -672,29 +642,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
             expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
             expect(result[:paid_total_exceeded]).to eq(0)
             expect(result[:paid_total_cashback]).to eq(0)
-
-            # # pay exceed so must have this to other loop
-            # expect(result[:receive_amount_detail_data_arr].count).to eq(3)
-            # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-            #   item[:installment_id] == installment1.id
-            # end
-            # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-            # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.0)
-            # expect(receive_amount_detail_data1[:paid_interest]).to eq(12.55)
-
-            # receive_amount_detail_data2 = result[:receive_amount_detail_data_arr].find do |item|
-            #   item[:installment_id] == installment2.id
-            # end
-            # expect(receive_amount_detail_data2[:installment_id]).to eq(installment2.id)
-            # expect(receive_amount_detail_data2[:paid_principal]).to eq(500.0)
-            # expect(receive_amount_detail_data2[:paid_interest]).to eq(12.55)
-
-            # receive_amount_detail_data3 = result[:receive_amount_detail_data_arr].find do |item|
-            #   item[:installment_id] == installment3.id
-            # end
-            # expect(receive_amount_detail_data3[:installment_id]).to eq(installment3.id)
-            # expect(receive_amount_detail_data3[:paid_principal]).to eq(500.0)
-            # expect(receive_amount_detail_data3[:paid_interest]).to eq(12.55)
 
             # Order
             order = contractor.orders.first
@@ -834,9 +781,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
       # 元本と利息の支払い
       result2 = AppropriatePaymentToSelectedInstallments.new(
         contractor,
@@ -854,8 +798,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result2[:paid_total_exceeded]).to eq(0)
       expect(result2[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result2[:receive_amount_detail_data_arr].count).to eq(0)
       expect(installment.paid_up_ymd).to eq '20190309'
     end
 
@@ -866,7 +808,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(installment.calc_late_charge).to eq 13.39
 
       # 遅損金の支払い
-      # AppropriatePaymentToInstallments.new(contractor, '20190309', 8931.0, jv_user, 'hoge').call
       result = AppropriatePaymentToSelectedInstallments.new(
         contractor,
         '20190309',
@@ -887,8 +828,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_cashback]).to eq(0)
       # paid_late_charge
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
       expect(installment.paid_up_ymd).to eq '20190309'
     end
 
@@ -913,9 +852,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
-
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
       # Order
       order = contractor.orders.first
@@ -995,9 +931,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
       # Order
       order = contractor.orders.first
       expect(order.paid_up_ymd).to eq nil
@@ -1060,9 +993,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
       # Payment 1
       payment1 = contractor.payments.find_by(due_ymd: '20190228')
       expect(payment1.total_amount.to_f).to eq 512.55
@@ -1102,29 +1032,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
-
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(3)
-      # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-      #   item[:installment_id] == installment1.id
-      # end
-      # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-      # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.0)
-      # expect(receive_amount_detail_data1[:paid_interest]).to eq(12.55)
-      # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(13.39)
-
-      # receive_amount_detail_data2 = result[:receive_amount_detail_data_arr].find do |item|
-      #   item[:installment_id] == installment2.id
-      # end
-      # expect(receive_amount_detail_data2[:installment_id]).to eq(installment2.id)
-      # expect(receive_amount_detail_data2[:paid_principal]).to eq(500.0)
-      # expect(receive_amount_detail_data2[:paid_interest]).to eq(12.55)
-
-      # receive_amount_detail_data3 = result[:receive_amount_detail_data_arr].find do |item|
-      #   item[:installment_id] == installment3.id
-      # end
-      # expect(receive_amount_detail_data3[:installment_id]).to eq(installment3.id)
-      # expect(receive_amount_detail_data3[:paid_principal]).to eq(500.0)
-      # expect(receive_amount_detail_data3[:paid_interest]).to eq(12.55)
 
       # Order
       order = contractor.orders.first
@@ -1231,9 +1138,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
       # Order
       order = contractor.orders.first
       expect(order.paid_up_ymd).to eq nil
@@ -1306,9 +1210,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
       # Payment 1
       payment1 = contractor.payments.find_by(due_ymd: '20190228')
       expect(payment1.total_amount.to_f).to eq 512.55
@@ -1369,9 +1270,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
 
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
-
       # Payment 1
       payment1 = contractor.payments.find_by(due_ymd: '20190228')
       expect(payment1.total_amount.to_f).to eq 512.55
@@ -1431,23 +1329,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
-
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(2)
-      # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-      #   item[:installment_id] == installment1.id
-      # end
-      # expect(receive_amount_detail_data1[:installment_id]).to eq(installment1.id)
-      # expect(receive_amount_detail_data1[:paid_principal]).to eq(500.0)
-      # expect(receive_amount_detail_data1[:paid_interest]).to eq(12.55)
-      # expect(receive_amount_detail_data1[:paid_late_charge]).to eq(21.23)
-
-      # receive_amount_detail_data2 = result[:receive_amount_detail_data_arr].find do |item|
-      #   item[:installment_id] == installment2.id
-      # end
-      # expect(receive_amount_detail_data2[:installment_id]).to eq(installment2.id)
-      # expect(receive_amount_detail_data2[:paid_principal]).to eq(500.0)
-      # expect(receive_amount_detail_data2[:paid_interest]).to eq(12.55)
-      # expect(receive_amount_detail_data2[:paid_late_charge]).to eq(10.36)
 
       # Payment 1
       payment1 = contractor.payments.find_by(due_ymd: '20190228')
@@ -1608,9 +1489,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
       expect(result[:paid_exceeded_and_cashback_amount]).to eq(0)
       expect(result[:paid_total_exceeded]).to eq(0)
       expect(result[:paid_total_cashback]).to eq(0)
-
-      # # pay all payment_amount so should not have this
-      # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
       # Payment 1
       payment1 = contractor.payments.find_by(due_ymd: '20190228')
@@ -2132,12 +2010,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
 
           # gain cashback already create so no need to have this
           expect(result[:current_gain_cashbacks]).to eq []
-          # current_gain_cashback = result[:current_gain_cashbacks].find do |item|
-          #   item[:order_id] == order.id
-          # end
-          # expect(current_gain_cashback[:cashback_amount]).to eq(order.calc_cashback_amount)
-          # expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
-          # expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
 
           order = contractor.orders.first
           expect(order.paid_up_ymd).to eq '20190228'
@@ -2181,12 +2053,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
 
           # gain cashback already create so no need to have this
           expect(result[:current_gain_cashbacks]).to eq []
-          # current_gain_cashback = result[:current_gain_cashbacks].find do |item|
-          #   item[:order_id] == order.id
-          # end
-          # expect(current_gain_cashback[:cashback_amount]).to eq(order.calc_cashback_amount)
-          # expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
-          # expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
 
           expect(contractor.pool_amount).to eq 80
 
@@ -2218,12 +2084,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
           
           # gain cashback already create so no need to have this
           expect(result[:current_gain_cashbacks]).to eq []
-          # current_gain_cashback = result[:current_gain_cashbacks].find do |item|
-          #   item[:order_id] == order.id
-          # end
-          # expect(current_gain_cashback[:cashback_amount]).to eq(order.calc_cashback_amount)
-          # expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
-          # expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
 
           cashback_use_histories = contractor.cashback_histories.use
           expect(cashback_use_histories.count).to eq 0
@@ -2260,23 +2120,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
           
           # gain cashback already create so no need to have this
           expect(result[:current_gain_cashbacks]).to eq []
-          # current_gain_cashback = result[:current_gain_cashbacks].find do |item|
-          #   item[:order_id] == order.id
-          # end
-          # expect(current_gain_cashback[:cashback_amount]).to eq(order.calc_cashback_amount)
-          # expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
-          # expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
-
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment.id
-          # end
-
-          # expect(receive_amount_detail_data1[:installment_id]).to eq installment.id
-          # expect(receive_amount_detail_data1[:exceeded_paid_amount]).to eq 120.0
-          # expect(receive_amount_detail_data1[:cashback_paid_amount]).to eq 0.0
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq 20.0
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq 100.0
           cashback_use_histories = contractor.cashback_histories.use
           expect(cashback_use_histories.count).to eq 0
           cashback_gain_histories = contractor.cashback_histories.gain
@@ -2309,18 +2152,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
           expect(result[:paid_exceeded_and_cashback_amount]).to eq 120
           expect(result[:paid_total_cashback]).to eq 120.0
           expect(result[:current_gain_cashbacks]).to eq []
-          # current_gain_cashback = result[:current_gain_cashbacks].find do |item|
-          #   item[:order_id] == order.id
-          # end
-          # expect(current_gain_cashback[:cashback_amount]).to eq(order.calc_cashback_amount)
-          # expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
-          # expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
-
-          # expect(result[:paid_exceeded_and_cashback_amount]).to eq 120
-          # expect(result[:paid_total_cashback]).to eq 120
-
-          # # pay all payment_amount so should not have this
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(0)
 
           order = contractor.orders.first
           expect(order.paid_up_ymd).to eq "20190228"
@@ -2491,16 +2322,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
           expect(current_gain_cashback[:payment_ymd]).to eq('20190228')
           expect(current_gain_cashback[:receive_amount_history_id]).to eq(result[:receive_amount_history_id])
   
-          # expect(result[:receive_amount_detail_data_arr].count).to eq(1)
-          # receive_amount_detail_data1 = result[:receive_amount_detail_data_arr].find do |item|
-          #   item[:installment_id] == installment.id
-          # end
-  
-          # expect(receive_amount_detail_data1[:installment_id]).to eq installment.id
-          # expect(receive_amount_detail_data1[:exceeded_paid_amount]).to eq 120.0
-          # expect(receive_amount_detail_data1[:cashback_paid_amount]).to eq 0.0
-          # expect(receive_amount_detail_data1[:paid_interest]).to eq 20.0
-          # expect(receive_amount_detail_data1[:paid_principal]).to eq 100.0
           cashback_use_histories = contractor.cashback_histories.use
           expect(cashback_use_histories.count).to eq 0
           expect(contractor.cashback_amount).to eq(400.00)
@@ -2508,8 +2329,6 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
           # Cashback should not use (have exceeded) used correctly
           expect(contractor.cashback_histories.last.cashback_amount).to eq 400.0
           expect(contractor.cashback_histories.last.total).to eq 400.0
-          # # be_nil because there need to put remaining payment to next loop
-          # expect(contractor.cashback_histories.last.receive_amount_history_id).to eq result[:receive_amount_history_id]
   
           # poolが発生していないこと
           expect(contractor.pool_amount).to eq 80.0
@@ -2903,7 +2722,7 @@ RSpec.describe AppropriatePaymentToSelectedInstallments, type: :model do
         expect(result[:total_exemption_late_charge]).to eq late_charge
         expect(result[:paid_total_cashback]).to eq 3050.2
 
-        # # poolが発生していないこと
+        # poolが発生していないこと
         expect(contractor.exemption_late_charge_count).to eq 1
   
   
