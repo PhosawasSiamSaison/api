@@ -19,7 +19,7 @@ class Jv::PaymentFromContractorListController < ApplicationController
     render json: { success: true, list: repayment_status_items }
   end
 
-  # Switch Sub Dealerの確認用ダイアログの情報
+  # สลับข้อมูลกล่องโต้ตอบยืนยันตัวแทนจำหน่ายย่อย
   def switch_sub_dealer_information
     information = SwitchSubDealer.new.get_information
 
